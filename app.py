@@ -38,7 +38,7 @@ def login():
             password = request.form["password"]
             yo = models.Usuarios.yo(usuario, password)
             if yo.empty:
-                return None
+                return jsonify({"estado" : "usuario no encontrado"})
             else:
                 session["usuario"] = usuario
                 session["password"] = password
