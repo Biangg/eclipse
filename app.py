@@ -77,4 +77,4 @@ def cargar():
         return jsonify(tabla)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=80)
+    app.run(debug=True)
