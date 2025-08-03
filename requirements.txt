@@ -18,7 +18,7 @@ flatbuffers==24.3.25
 fonttools==4.53.1
 idna==3.7
 jax==0.4.31
-jaxlib==0.4.31
+jaxlib==0.4.34
 Jinja2==3.1.4
 Kivy==2.3.0
 Kivy-Garden==0.1.5
