@@ -7,7 +7,7 @@ import pymysql.cursors
 
 
 # Configura las variables de entorno
-URL = "postgresql://postgres.hbqbmfydmrlcupuljpxt:admin@root@aws-0-eu-north-1.pooler.supabase.com:6543/postgres"
+URL = "postgresql://postgres:admin@root@db.hbqbmfydmrlcupuljpxt.supabase.co:5432/postgres"
 
 db_config = {
     'host' : 'localhost',
