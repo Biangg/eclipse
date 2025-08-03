@@ -8,12 +8,6 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'APOCALIPTO'
 DATABASE = 'database.db'
 
-def get_db():
-    db = getattr(g, '_database', None)
-    if db is None:
-        db = g._database = sqlite3.connect(DATABASE)
-    return db
-
 @app.route('/add', methods=['POST'])
 def add():
     if request.method == 'POST':
@@ -38,7 +32,7 @@ def login():
             password = request.form["password"]
             yo = models.Usuarios.yo(usuario, password)
             if yo.empty:
-                return jsonify({"estado" : "usuario no encontrado"})
+                return None
             else:
                 session["usuario"] = usuario
                 session["password"] = password
@@ -77,4 +71,4 @@ def cargar():
         return jsonify(tabla)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=8080)

@@ -7,7 +7,7 @@ import pymysql.cursors
 
 
 # Configura las variables de entorno
-URL = "postgresql://postgres:Iypg4M2V26TS14VF@db.hbqbmfydmrlcupuljpxt.supabase.co:5432/postgres"
+URL = "postgresql://postgres.aaayhwqxqyklufnvpqnj:#Admin_root0@aws-0-us-west-1.pooler.supabase.com:6543/postgres"
 
 db_config = {
     'host' : 'localhost',
@@ -21,12 +21,6 @@ db_config = {
 def get_connection():
     #conn = psycopg2.connect(URL)
     conn = pymysql.connect(**db_config)
-    return conn 
-
-# Función para obtener la conexión a PostgreSQL
-def get_connection():
-    conn = URL
-    #conn = pymysql.connect(**db_config)
     return conn 
 
 class Crear:
