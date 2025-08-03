@@ -19,8 +19,8 @@ db_config = {
 
 # Función para obtener la conexión a PostgreSQL
 def get_connection():
-    #conn = psycopg2.connect(URL)
-    conn = pymysql.connect(**db_config)
+    conn = psycopg2.connect(URL)
+    #conn = pymysql.connect(**db_config)
     return conn 
 
 class Crear:
