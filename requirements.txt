@@ -25,7 +25,6 @@ Kivy-Garden==0.1.5
 kiwisolver==1.4.5
 MarkupSafe==2.1.5
 matplotlib==3.9.2
-mediapipe==0.10.14
 ml-dtypes==0.4.0
 numpy==2.0.1
 opencv-contrib-python==4.10.0.84
