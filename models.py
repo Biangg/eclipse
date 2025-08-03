@@ -7,13 +7,7 @@ import pymysql.cursors
 
 
 # Configura las variables de entorno
-URL = psycopg2.connect(
-    dbname = "postgres",
-    user = "postgres.hbqbmfydmrlcupuljpxt",
-    password = "admin@root",
-    host = "aws-0-eu-north-1.pooler.supabase.com",
-    port = 6543
-)
+URL = "postgresql://postgres:Iypg4M2V26TS14VF@db.hbqbmfydmrlcupuljpxt.supabase.co:5432/postgres"
 
 db_config = {
     'host' : 'localhost',
@@ -22,6 +16,12 @@ db_config = {
     'database' : 'eclipse',
     'cursorclass' : pymysql.cursors.DictCursor
 }
+
+# Función para obtener la conexión a PostgreSQL
+def get_connection():
+    conn = psycopg2.connect(URL)
+    #conn = pymysql.connect(**db_config)
+    return conn 
 
 # Función para obtener la conexión a PostgreSQL
 def get_connection():
