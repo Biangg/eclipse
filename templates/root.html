@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <script src="{{ url_for('static', filename='js/jquery-3.6.4.min.js' ) }}"></script>
+    <title>{% block title%}{%endblock%}</title>
+</head>
+<body>
+    <div class="lateral">
+        <a style="background-image: url(../static/icons/basket-shopping-simple.png);" href="/"></a>
+        <a style="background-image: url(../static/icons/box.png);" href="/articulos"></a>
+        <a style="background-image: url(../static/icons/chart-simple.png);" href=""></a>
+        <a style="background-image: url(../static/icons/settings.png);" href=""></a>
+        <a style="background-image: url(../static/icons/lock-alt.png);" href=""></a>
+
+    </div>
+    <div class="contenido">
+        {%block content%}
+        {%endblock%}
+    </div>
+</body>
+</html>

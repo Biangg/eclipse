@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <script src="{{ url_for('static', filename='js/jquery-3.6.4.min.js' ) }}"></script>
+    <title>Eclipse | portal </title>
+</head>
+<body>
+    
+<div class="formulario">
+    <div>
+        <h2 style="color: white; font-family: sans-serif;"><b style="padding: 2px 5px;
+         border-radius: 4px; font-family: sans-serif;">Bienvenido</b></h2>
+         <p style="color: white; text-align: center; margin: 20px 0px; width: 200%;">
+            tu heramienta, tu espacio de trabajo: haz que cada desicion impulse tu exito
+         </p>
+    <form method="POST">
+      <div id="etapa1" class="etapa">
+        
+        <label style="color: white;" for="usuario"><b>Usuario</b></label>
+      <input style="font-family: monospace; width: 100%; background: rgb(44, 44, 44); color: white; border: 1px solid rgb(32, 32, 255);"
+       id="usuario" name="usuario" type="text" placeholder="">
+       <label style="color: white;" for="pass"><b>contrasena</b></label>
+       <input type="password" style="font-family: monospace; width: 100%; background: rgb(44, 44, 44); color: white; border: 1px solid rgb(32, 32, 255);" name="password" id="password">
+      <button style="float: right;" type="button" id="btnEntrar" >Entrar</button>
+      </div>
+
+      <p id="alerta" style="font-family: monospace; color: rgb(117, 117, 117); font-family: monospace;" 
+      >&copy; Biangg inc.</p>
+
+    </form>
+    </div>
+</div>
+<script>
+
+
+$(document).ready(function(){
+
+    var btnEntrar = document.getElementById('btnEntrar');
+    var usuario = document.getElementById("usuario");
+    var pass = document.getElementById("password");
+    var alerta = document.getElementById("alerta")
+
+
+    function login()
+    {
+        $.ajax({
+            url : '/',
+            data : $('form').serialize(),
+            type : 'POST',
+            success : function(response){
+                console.log(response);
+                //window.location.href = "./login"
+            },
+            error : function(error){
+                console.log(error);
+            }
+        });
+    }
+
+
+     btnEntrar.addEventListener("click", function(){
+        if(usuario.value.length >= 4){
+            if(pass.value.length >= 4){
+                login();
+            }else {
+                alerta.textContent = "El usuario o la contrasenia es incorecta";
+                alerta.style.color = "red"
+            }
+        }else {
+                alerta.textContent = "El usuario o la contrasenia es incorecta";
+                alerta.style.color = "red"
+            }
+
+     })
+
+})
+</script>
+
+</body>
+</html>

@@ -1,0 +1,107 @@
+
+{% extends "root.html" %}
+{% block title %} ventas {% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ventas.css') }}">
+    <div style="display: none;" class="oculto">
+        <form id="cargar" >
+            <input type="hidden" name="folder" id="nFolder">
+        </form>
+    </div>
+    <div class="superior">
+        <button> <img style="width: 20px; margin-right: 5px;" src="../static/icons/search.png" alt=""><b style="color: white;">Buscar</b></button>
+        <button> <img style="width: 20px; margin-right: 5px;" src="../static/icons/comment-alt-dots.png" alt=""><b style="color: white;">Comentario</b></button>
+        <button> <img style="width: 20px; margin-right: 5px;" src="../static/icons/trash.png" alt=""><b style="color: white;">Vacias cesta</b></button>
+        <button> <img style="width: 20px; margin-right: 5px;" src="../static/icons/search.png" alt=""><b style="color: white;">Buscar</b></button>
+    </div>
+    <div class="contenedor">
+        <div class="cuenta">
+            <div id="pila" class="pila"></div>
+            <div class="comprar" style="display: flex; flex-direction: column;">
+                <div style="height: 100%;" class="total"></div>
+                <div style="height: 50%; display: flex; justify-content: center;" class="botones">
+                    <button style="box-sizing: border-box; padding: 3px; background-color: blue; padding: 20px; width: 50%;" ><b>Comprar</b></button>
+                    <button style="box-sizing: border-box; padding: 3px; background-color: red; padding: 20px; width: 50%;" ><b>Cancelar</b></button>
+                </div>
+            </div>
+        </div>
+        <div id="panel" class="panel">
+            {% for i in range(categorias.shape[0])%}
+                <button style="box-sizing: border-box; padding: 40px; background-size: 70px;background-repeat: no-repeat;
+                background-image: url(../static/icons/folder.png); background-position: center; margin: 10px;" 
+                class="{{categorias['id_categoria'][i]}}" id="folder"><b>{{categorias['nombre_categoria'][i]}}</b></button>
+            {%endfor%}
+        </div>
+    </div>
+    <script>
+
+        selecsionados = []
+
+        for(i = 0; i < panel.children.length; i++){
+            panel.children[i].addEventListener("dblclick", function(){
+                tipo = this.id
+                nombre = this.className
+                if(tipo == "folder"){
+                    var nFolder = document.getElementById("nFolder");
+                    nFolder.value = nombre
+                    $.ajax({
+                    url : '/cargar',
+                    data : $('#cargar').serialize(),
+                    type : 'POST',
+                    success : function(response){
+                        ruta = nombre
+                        if(response.length < 1){
+                            panel. innerHTML = `
+                            <div class="carpetaVasia">
+                                    <h3>No hay articulos en esta categoria<h3>
+                                        <p> as click en <a>+<a> para registrar un nuevo srticulo<p>
+                            </div>`
+                        }else{
+                            let texto = '';
+                            response.forEach((item, idx) => {
+                            texto += `
+                            <button ondblclick='addElemento(this)' style="box-sizing: border-box; padding: 40px; background-size: 70px;background-repeat: no-repeat;
+                            background-image: url(../static/icons/boxes.png); background-position: center; margin: 10px;" 
+                            class="${item.id_producto}" id="folder"><b class='${item.precio_unitario}' >${item.nombre}</b></button>`
+                            });
+                            panel.innerHTML = texto
+                        }
+                        
+                    },
+                    error : function(error){
+                        console.log(error);
+                    }
+                });
+                }
+            })
+        }
+
+        
+        function actualizarPila(){
+            const pilaDiv = document.getElementById("pila");
+            pilaDiv.innerHTML = '';
+            
+            for (let i = (selecsionados.length -1); i>= 0; i--){
+                const item = document.createElement("div");
+                const texto = document.createElement("p");
+                const precio = document.createElement("p");
+                item.className = "row"
+                item.append(texto)
+                item.append(precio)
+                precio.className = " precio"
+                texto.textContent = selecsionados[i][0]
+                precio.textContent = selecsionados[i][1]
+                pilaDiv.append(item)
+            }
+        }
+
+        function addElemento(btn){
+            const id = btn.textContent;
+            const precio = btn.children[0].className 
+            selecsionados.indexOf(id);
+            selecsionados.push([id,precio])
+            actualizarPila();
+        }
+    </script>
+{% endblock %}

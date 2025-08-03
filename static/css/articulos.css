@@ -1,0 +1,107 @@
+
+
+.superior{
+    box-sizing: border-box;
+    padding: 5px;
+    display: flex;
+}
+.superior > button{
+    display: flex;
+    align-items: center;
+    background-color: rgb(59, 59, 59);
+    border: 1px solid rgb(44, 44, 44);;
+    cursor: pointer;
+    margin: 0px 5px;
+    padding: 20px;
+    transition: 200ms;
+}
+.superior > button:hover{
+    background: rgb(44, 44, 44);
+    transition: 200ms;
+    height: 100%;
+}
+.contenedor{
+    width: 100%;
+    height: 90%;
+    display: flex;
+}
+.cuenta{
+    width: 0px;
+    height: 100%;
+}
+.panel{
+    box-sizing: border-box;
+    width: 100%;
+    background-color: rgb(70, 70, 70);
+    height: 100%;
+    padding: 10px;
+}
+.addCategoria{
+    z-index: 1;
+    display: none;
+    position: fixed;
+    box-sizing: border-box;
+    padding: 5px;
+    background-color: white;
+    border-radius: 5px;
+    top: 10%;
+    left: 25%;
+}
+.addCategoria input{
+    margin: 3px 0px;
+    margin-bottom: 6px;
+    border: 1px solid gray;
+    outline: none;
+    box-sizing: border-box;
+    padding: 2px 3px;
+    border-radius: 3px;
+}
+#folder{
+    background-color: transparent;
+
+}
+#folder >b{
+    position: relative;
+    top: 50px;
+}
+.carpetaVasia{
+    width: 400px;
+    box-sizing: border-box;
+    position: fixed;
+    top: 50%;
+    left: 45%;
+    color: white;
+    text-align: center;
+}
+.addArticulo{
+    z-index: 1;
+    position: fixed;
+    box-sizing: border-box;
+    width: 230px;
+    right: 0px;
+    background-color: rgb(59, 59, 59);
+    height: 100%;
+    padding: 5px;
+    color: white;
+    display: none;
+}
+.addArticulo form{
+    padding: 10px 20px;
+}
+.addArticulo input, select, textarea{
+    margin-bottom: 12px;
+    background: white;
+    border: 0px solid white;
+    outline: 0px;
+    box-sizing: border-box;
+    padding: 3px 4px;
+    width: 100%;
+    border-radius: 3px;
+}
+.addArticulo > div{
+    display: flex;
+    justify-content: center;
+}
+.addArticulo button{
+    margin: 0px 4px;
+}

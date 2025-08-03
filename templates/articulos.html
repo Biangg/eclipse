@@ -1,0 +1,157 @@
+
+{% extends "root.html" %}
+{% block title %} articulos {% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/articulos.css') }}">
+    <div id="addCategoria" class="addCategoria">
+        <form id="addCat" >
+            <h3>Crear una nueva categoria</h3><br><b></b>
+            <label for="nombre">Nombre</label><br>
+            <input type="text" name="nombre" id="nombreCategoria"><br>
+            <input type="hidden" value="categoria">
+            <div>
+                <button style="box-sizing: border-box; padding: 3px; background-color: red; border-radius: 4px; padding: 3px 5px;" type="button" id="HAddcategoria"><b>cancelar</b></button>
+                <button style="box-sizing: border-box; padding: 3px; background-color: blue; border-radius: 4px; padding: 3px 5px;" type="button" id="AddCategoria"><b>Crear</b></button>
+            </div>
+            <input type="hidden" name="elemento" value="categoria">
+        </form>
+    </div>
+    <div id="addArticulo" class="addArticulo">
+        <h2 style="margin-top: 20%;" >Datos del Articulo</h2>
+        <form id="addArt">
+            <label for="nombre">Nombre del articulo</label><br>
+            <input type="text" name="nombre"><br>
+            <label for="describcion">Describcion</label><br>
+            <textarea name="describcion" id="describcion"></textarea><br>
+            <label for="precio">Precio unitario</label><br>
+            <input type="text" name="precio" id="precio"><br>
+            <label for="categoria">Categoria</label><br>
+            <select name="categoria" id="categoria">
+                    {% for i in range(categorias.shape[0])%}
+                    <option value="{{categorias['id_categoria'][i]}}">{{categorias['nombre_categoria'][i]}}</option>
+                    {% endfor %}
+            </select><br>
+            <div style="display: flex; justify-content: center; margin-top: 10px;">
+                <button style="box-sizing: border-box; padding: 3px; background-color: red; border-radius: 4px; padding: 3px 5px;" type="button" id="HAddArt"><b>cancelar</b></button>
+                <button style="box-sizing: border-box; padding: 3px; background-color: blue; border-radius: 4px; padding: 3px 5px;" type="button" id="AddArt"><b>Crear</b></button>
+            </div>
+            <input type="hidden" name="elemento" value="articulo">
+        </form>
+    </div>
+    <div style="display: none;" class="oculto">
+        <form id="cargar" >
+            <input type="hidden" name="folder" id="nFolder">
+        </form>
+    </div>
+    <div class="superior">
+        <button> <img style="width: 20px; margin-right: 5px;" src="../static/icons/search.png" alt=""><b style="color: white;">Buscar</b></button>
+        <button id="nuevaCat"> <img style="width: 20px; margin-right: 5px;" src="../static/icons/folder-plus-circle.png" alt=""><b style="color: white;">Nueva categoria</b></button>
+        <button id="nuevoArt"> <img style="width: 20px; margin-right: 5px;" src="../static/icons/plus-small.png" alt=""><b style="color: white;">Nuevo articulo</b></button>
+        <button> <img style="width: 20px; margin-right: 5px;" src="../static/icons/file-edit.png" alt=""><b style="color: white;">Editar articulo</b></button>
+    </div>
+    <div class="contenedor">
+        <div class="cuenta"></div>
+        <div id="panel" class="panel">
+            {% for i in range(categorias.shape[0])%}
+                <button style="box-sizing: border-box; padding: 40px; background-size: 70px;background-repeat: no-repeat;
+                background-image: url(../static/icons/folder.png); background-position: center; margin: 10px;" 
+                class="{{categorias['id_categoria'][i]}}" id="folder"><b>{{categorias['nombre_categoria'][i]}}</b></button>
+            {%endfor%}
+        </div>
+    </div>
+    <script>
+        var btn_addCategoria = document.getElementById("AddCategoria");
+        var btn_addArticulo = document.getElementById("AddArt");
+        var nombreCategoria = document.getElementById("nombreCategoria");
+        var addCategoria = document.getElementById("addCategoria");
+        var btn_HAddcategoria = document.getElementById("HAddcategoria");
+        var btn_HAddArticulo = document.getElementById("HAddArt");
+        var nuevaCat = document.getElementById("nuevaCat");
+        var panel = document.getElementById("panel");
+        var nuevoArt = document.getElementById("nuevoArt");
+        var addArticulo = document.getElementById("addArticulo");
+        var ruta = "raiz";
+
+        for(i = 0; i < panel.children.length; i++){
+            panel.children[i].addEventListener("dblclick", function(){
+                tipo = this.id
+                nombre = this.className
+                if(tipo == "folder"){
+                    var nFolder = document.getElementById("nFolder");
+                    nFolder.value = nombre
+                    $.ajax({
+                    url : '/cargar',
+                    data : $('#cargar').serialize(),
+                    type : 'POST',
+                    success : function(response){
+                        ruta = nombre
+                        if(response.length < 1){
+                            panel. innerHTML = `
+                            <div class="carpetaVasia">
+                                    <h3>No hay articulos en esta categoria<h3>
+                                        <p> as click en <a>+<a> para registrar un nuevo srticulo<p>
+                            </div>`
+                        }else{
+                            let texto = '';
+                            response.forEach((item, idx) => {
+                            texto += `
+                            <button style="box-sizing: border-box; padding: 40px; background-size: 70px;background-repeat: no-repeat;
+                            background-image: url(../static/icons/folder.png); background-position: center; margin: 10px;" 
+                            class="${item.id_producto}" id="folder"><b>${item.nombre}</b></button>`
+                            });
+                            panel.innerHTML = texto
+                        }
+                        
+                    },
+                    error : function(error){
+                        console.log(error);
+                    }
+                });
+                }
+            })
+        }
+
+        btn_addCategoria.addEventListener("click", function(){
+            $.ajax({
+                    url : '/add',
+                    data : $('#addCat').serialize(),
+                    type : 'POST',
+                    success : function(response){
+                        window.location.reload()
+                    },
+                    error : function(error){
+                        console.log(error);
+                    }
+                });
+        })
+        btn_addArticulo.addEventListener("click", function(){
+            $.ajax({
+                    url : '/add',
+                    data : $('#addArt').serialize(),
+                    type : 'POST',
+                    success : function(response){
+                        window.location.reload()
+                    },
+                    error : function(error){
+                        console.log(error);
+                    }
+                });
+        })
+
+        btn_HAddcategoria.addEventListener("click", function(){
+            addCategoria.style.display = "none"
+        })
+        btn_HAddArticulo.addEventListener("click", function(){
+            addArticulo.style.display = "none"
+        })
+
+        nuevaCat.addEventListener("click", function(){
+            addCategoria.style.display = "block"
+        })
+
+        nuevoArt.addEventListener("click", function(){
+            addArticulo.style.display = "block"
+        })
+    </script>
+{% endblock %}

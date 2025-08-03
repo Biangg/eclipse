@@ -1,0 +1,75 @@
+
+.superior{
+    box-sizing: border-box;
+    padding: 5px;
+    display: flex;
+}
+.superior > button{
+    display: flex;
+    align-items: center;
+    background-color: rgb(59, 59, 59);
+    border: 1px solid rgb(44, 44, 44);;
+    cursor: pointer;
+    margin: 0px 5px;
+    padding: 20px;
+    transition: 200ms;
+}
+.superior > button:hover{
+    background: rgb(44, 44, 44);
+    transition: 200ms;
+    height: 100%;
+}
+.contenedor{
+    width: 100%;
+    height: 90%;
+    display: flex;
+}
+.cuenta{
+    width: 400px;
+    max-width: 25%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.cuenta > div{
+    height: 100%;
+}
+.cuenta > .comprar{
+    height: 30%;
+}
+.panel{
+    width: 100%;
+    background-color: rgb(92, 92, 92);
+    height: 100%;
+}
+#folder{
+    background-color: transparent;
+
+}
+#folder >b{
+    position: relative;
+    top: 50px;
+}
+.carpetaVasia{
+    width: 400px;
+    box-sizing: border-box;
+    position: fixed;
+    top: 50%;
+    left: 45%;
+    color: white;
+    text-align: center;
+}
+.row{
+    box-sizing: border-box;
+    padding: 10px;
+    display: flex;
+    width: 100%;
+}
+.row p{
+    font-family: monospace;
+    color: white;
+    width: 100%;
+}
+.row .precio{
+    width: 30%;
+}
