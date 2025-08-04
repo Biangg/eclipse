@@ -23,27 +23,30 @@ def add():
         models.Crear.categoria(nombre)
         return jsonify({"estado" : "ok"})
 
+
 @app.route('/', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
-        usuario = models.Usuarios()
         try:
             usuario = request.form["usuario"]
             password = request.form["password"]
             yo = models.Usuarios.yo(usuario, password)
             if yo.empty:
-                return None
+                return jsonify({'status': 401, 'error': 'Usuario no encontrado'}), 401  # ⚠️ mejor que return None
             else:
                 session["usuario"] = usuario
                 session["password"] = password
                 response = {'status': 200, 'usuario': usuario}
                 return jsonify(response)
-        except:
-            return None
+        except Exception as e:
+            return jsonify({'status': 500, 'error': str(e)}), 500  # devuelve error con mensaje
+
+    # GET method
     if 'password' in session and 'usuario' in session:
         yo = models.Usuarios.yo(session['usuario'], session['password'])
         categorias = models.Cargador.categorias()
-        return make_response(render_template('ventas.html', yo=yo, categorias = categorias))
+        return make_response(render_template('ventas.html', yo=yo, categorias=categorias))
+    
     return render_template('login.html')
 
 @app.route('/ventas')
