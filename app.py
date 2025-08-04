@@ -3,7 +3,6 @@ from flask import Flask, session, jsonify, render_template, make_response, g, re
 import datetime as dt
 import pandas as pd
 import sqlite3, models, json
-from functools import wraps
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'APOCALIPTO'
