@@ -3,7 +3,7 @@ import psycopg2
 import pandas as pd
 
 # URL de conexión a PostgreSQL (Supabase) dxLP37V1STXwDNIy
-"postgresql://postgres.unwfcldhkvziqjaqrofv:nO2KMyzrxfvFQv8K@aws-0-eu-north-1.pooler.supabase.com:5432/postgres"
+URL = "postgresql://postgres.unwfcldhkvziqjaqrofv:nO2KMyzrxfvFQv8K@aws-0-eu-north-1.pooler.supabase.com:5432/postgres"
 
 # Función para obtener la conexión
 def get_connection():
