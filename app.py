@@ -36,7 +36,6 @@ def add():
 
 
 @app.route('/', methods=['POST', 'GET'])
-@json_error_handler
 def login():
     if request.method == 'POST':
         try:
