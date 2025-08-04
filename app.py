@@ -1,12 +1,23 @@
 
-from flask import Flask, session, jsonify, render_template, make_response, g, request
+from flask import Flask, session, jsonify, render_template, make_response, g, request, current_app
 import datetime as dt
 import pandas as pd
 import sqlite3, models, json
+from functools import wraps
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'APOCALIPTO'
 DATABASE = 'database.db'
+
+def json_error_handler(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        try:
+            return f(*args, **kwargs)
+        except Exception as e:
+            current_app.logger.error(f"Error en {f.__name__}: {e}", exc_info=True)
+            return jsonify({'error': str(e)}), 500
+    return decorated_function
 
 @app.route('/add', methods=['POST'])
 def add():
@@ -25,6 +36,7 @@ def add():
 
 
 @app.route('/', methods=['POST', 'GET'])
+@json_error_handler
 def login():
     if request.method == 'POST':
         try:
