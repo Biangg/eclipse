@@ -60,7 +60,7 @@ def articulos():
         yo = models.Usuarios.yo(session['usuario'], session['password'])
         categorias = models.Cargador.categorias()
         return make_response(render_template('articulos.html', categorias = categorias))
-    return render_template('login.html')
+    return make_response(render_template('login.html'))
 
 @app.route('/cargar', methods=['POST'])
 def cargar():
