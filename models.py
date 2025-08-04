@@ -13,12 +13,6 @@ def get_connection():
     except Exception as e:
         print("❌ Error al conectar con la base de datos:", e)
 
-# Función para obtener la conexión a PostgreSQL
-def get_connection():
-    #conn = psycopg2.connect(URL)
-    conn = pymysql.connect(**db_config)
-    return conn 
-
 class Crear:
     @staticmethod
     def categoria(nombre):
