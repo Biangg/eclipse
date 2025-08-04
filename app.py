@@ -50,13 +50,11 @@ def login():
                 return jsonify(response)
         except Exception as e:
             return jsonify({'status': 500, 'error': str(e)}), 500  # devuelve error con mensaje
-
     # GET method
     if 'password' in session and 'usuario' in session:
         yo = models.Usuarios.yo(session['usuario'], session['password'])
         categorias = models.Cargador.categorias()
         return make_response(render_template('ventas.html', yo=yo, categorias=categorias))
-    
     return render_template('login.html')
 
 @app.route('/ventas')
