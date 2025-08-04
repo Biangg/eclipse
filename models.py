@@ -2,8 +2,8 @@ import datetime as dt
 import psycopg2
 import pandas as pd
 
-# URL de conexión a PostgreSQL (Supabase)
-URL = "postgresql://postgres:dxLP37V1STXwDNIy@db.rxcpqueyroejuhcmhyyl.supabase.co:5432/postgres"
+# URL de conexión a PostgreSQL (Supabase) dxLP37V1STXwDNIy
+URL = "postgresql://postgres.unwfcldhkvziqjaqrofv:dxLP37V1STXwDNIy@aws-0-eu-north-1.pooler.supabase.com:5432/postgres"
 
 # Función para obtener la conexión
 def get_connection():
