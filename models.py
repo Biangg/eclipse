@@ -1,42 +1,41 @@
-
 import datetime as dt
 import psycopg2
 import pandas as pd
 
-
-# Configura las variables de entorno
+# URL de conexión a PostgreSQL (Supabase)
 URL = "postgresql://postgres:S85yxyRmRKFs1yVm@db.hbqbmfydmrlcupuljpxt.supabase.co:5432/postgres"
 
-# Función para obtener la conexión a PostgreSQL
+# Función para obtener la conexión
 def get_connection():
-    conn = psycopg2.connect(URL)
-    return conn 
+    return psycopg2.connect(URL)
 
 class Crear:
+    @staticmethod
     def categoria(nombre):
         conexion = get_connection()
         try:
             with conexion.cursor() as cursor:
                 cursor.execute("""
                     INSERT INTO categorias (nombre_categoria)
-                    VALUES ( %s)
-                """, (nombre))
+                    VALUES (%s)
+                """, (nombre,))  # ← Coma importante
                 conexion.commit()
         finally:
             conexion.close()
-    
-    def articulo(nombre, describcion, precio, categoria):
+
+    @staticmethod
+    def articulo(nombre, descripcion, precio, categoria):
         conexion = get_connection()
         try:
             with conexion.cursor() as cursor:
                 cursor.execute("""
-                    INSERT INTO productos (nombre, describcion, precio_unitario, id_categoria)
+                    INSERT INTO productos (nombre, descripcion, precio_unitario, id_categoria)
                     VALUES (%s, %s, %s, %s)
-                """, (nombre, describcion, int(precio), int(categoria)))
+                """, (nombre, descripcion, float(precio), int(categoria)))
                 conexion.commit()
         finally:
             conexion.close()
-    
+
 
 class Usuarios:
     def insertar(nombre, password):
