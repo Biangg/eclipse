@@ -36,8 +36,8 @@ class Crear:
         finally:
             conexion.close()
 
-
 class Usuarios:
+    @staticmethod
     def insertar(nombre, password):
         conexion = get_connection()
         try:
@@ -50,6 +50,7 @@ class Usuarios:
         finally:
             conexion.close()
 
+    @staticmethod
     def yo(usuario, password):
         conexion = get_connection()
         try:
@@ -59,11 +60,10 @@ class Usuarios:
                 yo = cursor.fetchall()
         finally:
             conexion.close()
-        
-        # Retornar un DataFrame vacío si no se encuentra el usuario
-        return pd.DataFrame(yo, columns = columns)
+        return pd.DataFrame(yo, columns=columns)
 
 class Cargador:
+    @staticmethod
     def categorias():
         conexion = get_connection()
         try:
@@ -73,17 +73,16 @@ class Cargador:
                 categorias = cursor.fetchall()
         finally:
             conexion.close()
-        # Retornar un DataFrame vacío si no se encuentra el usuario
-        return pd.DataFrame(categorias, columns = columns)
-    
+        return pd.DataFrame(categorias, columns=columns)
+
+    @staticmethod
     def articulo(categoria):
         conexion = get_connection()
         try:
             with conexion.cursor() as cursor:
-                cursor.execute("SELECT * FROM productos WHERE id_categoria = %s", (int(categoria)))
+                cursor.execute("SELECT * FROM productos WHERE id_categoria = %s", (int(categoria),))  # ← tupla correcta
                 columns = [desc[0] for desc in cursor.description]
                 articulos = cursor.fetchall()
         finally:
             conexion.close()
-        # Retornar un DataFrame vacío si no se encuentra el usuario
-        return pd.DataFrame(articulos, columns = columns)
+        return pd.DataFrame(articulos, columns=columns)
