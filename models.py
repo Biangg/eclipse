@@ -7,7 +7,11 @@ URL = "postgresql://postgres:dxLP37V1STXwDNIy@db.rxcpqueyroejuhcmhyyl.supabase.c
 
 # Función para obtener la conexión
 def get_connection():
-    return psycopg2.connect(URL)
+    try:
+        return psycopg2.connect(URL)
+        print("✅ Conexión exitosa a la base de datos")
+    except Exception as e:
+        print("❌ Error al conectar con la base de datos:", e)
 
 class Crear:
     @staticmethod
