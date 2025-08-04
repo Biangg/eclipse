@@ -1,38 +1,45 @@
 
-from flask import Flask, session, jsonify, render_template, make_response, g, request, current_app
+from flask import Flask, session, jsonify, render_template, make_response, g, request
 import datetime as dt
 import pandas as pd
-import sqlite3, models, json
+import sqlite3, models, json, os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'APOCALIPTO'
-DATABASE = 'database.db'
 
-def json_error_handler(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        try:
-            return f(*args, **kwargs)
-        except Exception as e:
-            current_app.logger.error(f"Error en {f.__name__}: {e}", exc_info=True)
-            return jsonify({'error': str(e)}), 500
-    return decorated_function
+UPLOAD_FOLDER = 'static/image/productos'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 @app.route('/add', methods=['POST'])
 def add():
     if request.method == 'POST':
         elemento = request.form['elemento']
         if elemento == "articulo":
+            imagen = request.files['imagen']
+            categoria = request.form['categoria']
+            if imagen and allowed_file(imagen.filename):
+                filename = secure_filename(imagen.filename)
+                os.makedirs(app.config['UPLOAD_FOLDER'] + f"/{categoria}", exist_ok=True)  # Crea la carpeta si no existe
+                imagen.save(os.path.join(app.config['UPLOAD_FOLDER'] + f"/{categoria}", filename))
+            else:
+                print("la imagen no es valida")
             nombre = request.form['nombre']
             describcion = request.form['describcion']
             precio = request.form['precio']
-            categoria = request.form['categoria']
-            models.Crear.articulo(nombre, describcion, precio, categoria)
+            codigo = request.form['codigo']
+            impuestos = request.form['impuestos']
+            models.Crear.articulo(nombre, describcion, impuestos, codigo,filename, precio, categoria)
             return jsonify({"estado" : "ok"})
         nombre = request.form["nombre"]
         models.Crear.categoria(nombre)
         return jsonify({"estado" : "ok"})
-
 
 @app.route('/', methods=['POST', 'GET'])
 def login():
@@ -62,7 +69,14 @@ def ventas():
     if 'password' in session and 'usuario' in session:
         yo = models.Usuarios.yo(session['usuario'], session['password'])
         categorias = models.Cargador.categorias()
-        return make_response(render_template('ventas.html', categorias = categorias))
+        return make_response(render_template('ajustes.html', categorias = categorias))
+    return render_template('login.html')
+
+@app.route('/ajustes')
+def config():
+    if 'password' in session and 'usuario' in session:
+        yo = models.Usuarios.yo(session['usuario'], session['password'])
+        return make_response(render_template('ajustes.html'))
     return render_template('login.html')
 
 @app.route('/articulos')
@@ -71,7 +85,7 @@ def articulos():
         yo = models.Usuarios.yo(session['usuario'], session['password'])
         categorias = models.Cargador.categorias()
         return make_response(render_template('articulos.html', categorias = categorias))
-    return make_response(render_template('login.html'))
+    return render_template('login.html')
 
 @app.route('/cargar', methods=['POST'])
 def cargar():
@@ -82,4 +96,4 @@ def cargar():
         return jsonify(tabla)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8080)
+    app.run(debug=True, port=80)

@@ -2,7 +2,7 @@ import datetime as dt
 import psycopg2
 import pandas as pd
 
-# URL de conexión a PostgreSQL (Supabase) dxLP37V1STXwDNIy
+# URL de conexión a PostgreSQL (Supabase)  nO2KMyzrxfvFQv8K ; CBoQbbb7KfXsOYzN
 URL = "postgresql://postgres.unwfcldhkvziqjaqrofv:nO2KMyzrxfvFQv8K@aws-0-eu-north-1.pooler.supabase.com:5432/postgres"
 
 # Función para obtener la conexión
@@ -12,6 +12,12 @@ def get_connection():
         print("✅ Conexión exitosa a la base de datos")
     except Exception as e:
         print("❌ Error al conectar con la base de datos:", e)
+
+# Función para obtener la conexión a PostgreSQL
+def get_connection():
+    #conn = psycopg2.connect(URL)
+    conn = pymysql.connect(**db_config)
+    return conn 
 
 class Crear:
     @staticmethod
@@ -28,14 +34,27 @@ class Crear:
             conexion.close()
 
     @staticmethod
-    def articulo(nombre, descripcion, precio, categoria):
+    def articulo(nombre, describcion, impuestos, codigo,imagen, precio, categoria):
         conexion = get_connection()
         try:
             with conexion.cursor() as cursor:
                 cursor.execute("""
-                    INSERT INTO productos (nombre, descripcion, precio_unitario, id_categoria)
+                    INSERT INTO productos (nombre, describcion,impuestos, codigo,imagen, precio_unitario, id_categoria)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
+                """, (nombre, describcion, impuestos,codigo,imagen, float(precio), int(categoria)))
+                conexion.commit()
+        finally:
+            conexion.close()
+    
+    @staticmethod
+    def venta(total, id_usuario,id_cliente):
+        conexion = get_connection()
+        try:
+            with conexion.cursor() as cursor:
+                cursor.execute("""
+                    INSERT INTO ventas (total, id_usuario,id_cliente)
                     VALUES (%s, %s, %s, %s)
-                """, (nombre, descripcion, float(precio), int(categoria)))
+                """, (total, id_usuario,id_cliente))
                 conexion.commit()
         finally:
             conexion.close()

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="Inventario" class="section_main">
+    <div class="section_header inventario_header">
+        <h2>Inventario</h2>
+        <p class="nota">
+            Configura el control de stock, alertas y categorías de productos.
+        </p>
+    </div>
+
+    <div class="inventario_container">
+        <div class="inventario_opciones">
+            <div class="inventario_switch">
+                <label for="control_stock">Activar control de stock</label>
+                <input type="checkbox" id="control_stock">
+            </div>
+            <div class="inventario_switch">
+                <label for="alerta_stock">Activar alertas por bajo stock</label>
+                <input type="checkbox" id="alerta_stock">
+            </div>
+        </div>
+
+        <div class="inventario_categorias">
+            <h3>Categorías de producto</h3>
+            <div class="categorias_form">
+                <input type="text" id="nueva_categoria" placeholder="Nueva categoría">
+                <button class="btn_guardar" id="btn_agregar_categoria">Agregar</button>
+            </div>
+            <ul class="categorias_lista">
+                <li>Licor <button class="btn_eliminar_categoria">Eliminar</button></li>
+                <li>Tinto <button class="btn_eliminar_categoria">Eliminar</button></li>
+                <li>Batido <button class="btn_eliminar_categoria">Eliminar</button></li>
+            </ul>
+        </div>
+
+        <div class="inventario_unidades">
+            <h3>Unidad predeterminada</h3>
+            <select id="unidad_predeterminada">
+                <option value="pieza">Pieza</option>
+                <option value="kg">Kilogramo</option>
+                <option value="lt">Litro</option>
+                <option value="m">Metro</option>
+            </select>
+        </div>
+    </div>
+</div>
+{% endblock %}

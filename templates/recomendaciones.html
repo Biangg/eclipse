@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="Recomendaciones" class="section_main">
+    <div class="section_header recomendaciones_header">
+        <h2>IA y Recomendaciones</h2>
+        <p class="nota">
+            Predicciones de venta, sugerencias de reposición y recomendaciones de precios en francos CFA (BEAC).
+        </p>
+    </div>
+
+    <div class="recomendaciones_cards_container">
+        <div class="recomendacion_card">
+            <h3>Predicción de Ventas</h3>
+            <p class="recomendacion_valor">+12% esta semana</p>
+            <p class="recomendacion_desc">Se espera un aumento en las ventas de bebidas energéticas. Considera aumentar el stock.</p>
+        </div>
+        <div class="recomendacion_card">
+            <h3>Reposición Sugerida</h3>
+            <p class="recomendacion_valor">Vodka: 15 botellas</p>
+            <p class="recomendacion_desc">El inventario de vodka está por debajo del mínimo recomendado. Sugerimos reponer pronto.</p>
+        </div>
+        <div class="recomendacion_card">
+            <h3>Recomendación de Precios (BEAC)</h3>
+            <p class="recomendacion_valor">Gin Tonic: 2,500 FCFA</p>
+            <p class="recomendacion_desc">Ajusta el precio del Gin Tonic para maximizar el margen según la demanda actual.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

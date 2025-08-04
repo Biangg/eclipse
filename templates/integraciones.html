@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="Integraciones" class="section_main">
+    <div class="section_header integraciones_header">
+        <h2>Integraciones</h2>
+        <p class="nota">
+            Importa y exporta datos, realiza copias de seguridad y genera reportes de tu tienda.
+        </p>
+    </div>
+
+    <div class="integraciones_container">
+        <div class="integracion_group">
+            <h3>Importar archivos</h3>
+            <form class="importar_form form_cont">
+                <input type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                <button class="btn_guardar" type="submit">Importar</button>
+            </form>
+        </div>
+        <div class="integracion_group">
+            <h3>Exportar archivos</h3>
+            <button class="btn_guardar">Exportar CSV</button>
+            <button class="btn_guardar">Exportar Excel</button>
+        </div>
+        <div class="integracion_group">
+            <h3>Copia de seguridad</h3>
+            <button class="btn_guardar">Generar copia de seguridad</button>
+            <button class="btn_guardar">Restaurar copia</button>
+        </div>
+        <div class="integracion_group">
+            <h3>Reportes</h3>
+            <button class="btn_guardar">Generar reporte de ventas</button>
+            <button class="btn_guardar">Generar reporte de inventario</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -19,13 +19,23 @@
     </div>
     <div id="addArticulo" class="addArticulo">
         <h2 style="margin-top: 20%;" >Datos del Articulo</h2>
-        <form id="addArt">
+        <form id="addArt" enctype="multipart/form-data">
+            <input type="hidden" name="elemento" value="articulo">
             <label for="nombre">Nombre del articulo</label><br>
             <input type="text" name="nombre"><br>
             <label for="describcion">Describcion</label><br>
             <textarea name="describcion" id="describcion"></textarea><br>
+            <label for="nombre">Codigo de baras</label><br>
+            <input type="text" name="codigo"><br>
+            <div style="display: flex; width: 100%; box-sizing: border-box;
+            padding: 0px; height: 20px; align-items: center; 
+            margin: 0px 0px 8px 0px;"><input style="width: 20px; position: relative; top: 8px;" type="checkbox" name="nc" id="nc"><label for="nc">no tengo</label><br></div>
             <label for="precio">Precio unitario</label><br>
             <input type="text" name="precio" id="precio"><br>
+            <label for="impuestos">Impuestos</label><br>
+            <input type="text" name="impuestos" id="impuestos"><br>
+            <label for="imagen">imagen del producto</label><br>
+            <input type="file" name="imagen" id="imagen" required><br>
             <label for="categoria">Categoria</label><br>
             <select name="categoria" id="categoria">
                     {% for i in range(categorias.shape[0])%}
@@ -34,9 +44,8 @@
             </select><br>
             <div style="display: flex; justify-content: center; margin-top: 10px;">
                 <button style="box-sizing: border-box; padding: 3px; background-color: red; border-radius: 4px; padding: 3px 5px;" type="button" id="HAddArt"><b>cancelar</b></button>
-                <button style="box-sizing: border-box; padding: 3px; background-color: blue; border-radius: 4px; padding: 3px 5px;" type="button" id="AddArt"><b>Crear</b></button>
+                <button style="box-sizing: border-box; padding: 3px; background-color: blue; border-radius: 4px; padding: 3px 5px;" type="button" id="AddArt"><b>subir</b></button>
             </div>
-            <input type="hidden" name="elemento" value="articulo">
         </form>
     </div>
     <div style="display: none;" class="oculto">
@@ -97,7 +106,7 @@
                             response.forEach((item, idx) => {
                             texto += `
                             <button style="box-sizing: border-box; padding: 40px; background-size: 70px;background-repeat: no-repeat;
-                            background-image: url(../static/icons/folder.png); background-position: center; margin: 10px;" 
+                            background-image: url(../static/icons/boxes.png); background-position: center; margin: 10px;" 
                             class="${item.id_producto}" id="folder"><b>${item.nombre}</b></button>`
                             });
                             panel.innerHTML = texto
@@ -117,6 +126,8 @@
                     url : '/add',
                     data : $('#addCat').serialize(),
                     type : 'POST',
+                    contentType: false,
+                    processData: false,
                     success : function(response){
                         window.location.reload()
                     },
@@ -125,19 +136,24 @@
                     }
                 });
         })
-        btn_addArticulo.addEventListener("click", function(){
-            $.ajax({
-                    url : '/add',
-                    data : $('#addArt').serialize(),
-                    type : 'POST',
-                    success : function(response){
-                        window.location.reload()
-                    },
-                    error : function(error){
-                        console.log(error);
-                    }
-                });
-        })
+        btn_addArticulo.addEventListener("click", function () {
+    const form = document.getElementById('addArt');
+    const formData = new FormData(form);
+
+    $.ajax({
+        url: '/add',
+        data: formData,
+        type: 'POST',
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            window.location.reload();
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+});
 
         btn_HAddcategoria.addEventListener("click", function(){
             addCategoria.style.display = "none"

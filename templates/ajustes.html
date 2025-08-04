@@ -1,0 +1,107 @@
+{% extends "root.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+ <div class="main">
+        <ul class="frame">
+            <li>...</li>
+        </ul>
+        <header>
+            <div class="header">
+                <img src="..." alt="logotipo" id="Perfil" class="logo">
+                <div>
+                    <h1 id="BussinesName" class="username">Tienda</h1>
+                    <p id="Correo" class="email">tienda@email.com</p>
+                </div>
+            </div>
+            <nav class="nav">
+
+                <h2>Panel de Configuraciones</h2>
+
+                <ul class="nav-list">
+                    <li><a id="GeneralConfig" href="#">General</a></li>
+                    <ul class="sub-list">
+                        <li><a href="#">Perfil</a></li>
+                        <li><a href="#">Seguridad</a></li>
+                        <li><a href="#">Notificaciones</a></li>
+                    </ul>
+                    <li><a id="UsuariosPermisos" href="#">Usuarios y Permisos</a></li>
+                    <ul class="sub-list">
+                        <li><a href="#">Administrar Usuarios</a></li>
+                        <li><a href="#">Roles y Permisos</a></li>
+                    </ul>
+                    <li><a id="Inventario" href="#">Inventario</a></li>
+                    <ul class="sub-list">
+                        <li><a href="#">Productos</a></li>
+                        <li><a href="#">Categorías</a></li>
+                        <li><a href="#">Proveedores</a></li>
+                    </ul>
+                    <li><a id="IA" href="#">IA y Recomendaciones</a></li>
+                    <ul class="sub-list">
+                        <li><a href="#">Configuración de IA</a></li>
+                        <li><a href="#">Recomendaciones Personalizadas</a></li>
+                    </ul>
+                    <li><a id="Integraciones" href="#">Integraciones</a></li>
+                    <ul class="sub-list">
+                        <li><a href="#">Importar y Exportar (CSV, Excel)</a></li>
+                        <li><a href="#">Copia de seguridad</a></li>
+                    </ul>
+                </ul>
+        </header>
+
+<main>
+<div id="Ajustes" class="section_main">
+    <div class="section_header">
+        <h2>Ajustes Generales</h2>
+
+        <label for="toggle">Activar copia de seguridad</label>
+        <input type="checkbox" name="toggle" id="CopiaSeguridad">
+
+        <p class="nota">
+            Configurar los ajustes generales de tu tienda, como el nombre, correo electrónico y opciones de copia de seguridad.
+        </p>
+    </div>
+
+    <form action="#" method="post" class="ajustes_form" enctype="multipart/form-data">
+        <div class="form_group">
+            <label for="logo">Logotipo de la tienda</label>
+            <input type="file" id="logo" name="logo" accept="image/*">
+        </div>
+        <div class="form_group">
+            <label for="nombre">Nombre de la tienda</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Nombre de la tienda">
+        </div>
+        <div class="form_group">
+            <label for="idioma">Idioma</label>
+            <select id="idioma" name="idioma">
+                <option value="es">Español</option>
+                <option value="en">Inglés</option>
+                <option value="fr">Francés</option>
+            </select>
+        </div>
+        <div class="form_group">
+            <label for="moneda">Moneda</label>
+            <select id="moneda" name="moneda">
+                <option value="mxn">Peso Mexicano (MXN)</option>
+                <option value="usd">Dólar Estadounidense (USD)</option>
+                <option value="eur">Euro (EUR)</option>
+            </select>
+        </div>
+        <div class="form_group">
+            <label for="direccion">Dirección</label>
+            <input type="text" id="direccion" name="direccion" placeholder="Dirección de la tienda">
+        </div>
+        <div class="form_group">
+            <label for="pais">País</label>
+            <input type="text" id="pais" name="pais" placeholder="País">
+        </div>
+        <div class="form_group">
+            <label for="ciudad">Ciudad</label>
+            <input type="text" id="ciudad" name="ciudad" placeholder="Ciudad">
+        </div>
+        <button type="submit" class="btn_guardar">Guardar cambios</button>
+    </form>
+</div>
+</main>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+{% endblock %}
