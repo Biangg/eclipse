@@ -2,25 +2,14 @@
 import datetime as dt
 import psycopg2
 import pandas as pd
-import pymysql
-import pymysql.cursors
 
 
 # Configura las variables de entorno
 URL = "postgresql://postgres:S85yxyRmRKFs1yVm@db.hbqbmfydmrlcupuljpxt.supabase.co:5432/postgres"
 
-db_config = {
-    'host' : 'localhost',
-    'user' : 'celest',
-    'password' : '',
-    'database' : 'eclipse',
-    'cursorclass' : pymysql.cursors.DictCursor
-}
-
 # Función para obtener la conexión a PostgreSQL
 def get_connection():
     conn = psycopg2.connect(URL)
-    #conn = pymysql.connect(**db_config)
     return conn 
 
 class Crear:
