@@ -1,0 +1,86 @@
+/* ==== ESTILOS PARA LA SECCIÓN DE GRÁFICAS ================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Corregido */
+}
+
+.cont_grf {
+    min-height: 100vh;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem; /* Usamos rem para consistencia */
+}
+
+.grf_datos, .grf_info {
+    width: 100%;
+    min-height: 350px;
+    padding: 1rem; /* Usamos rem para consistencia */
+    border-radius: 10px;
+    background-color: rgba(165, 164, 164, 0.89);
+}
+
+.grf_datos {
+    min-width: 300px;
+    min-height: 155px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adaptamos para mejor responsividad */
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.card_inf_grf {
+    height: 110px;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 10px;
+    display: grid;
+    grid-template-columns: 1fr 2fr; /* Ajustamos para el contenido */
+    align-items: center;
+}
+
+.card_inf_grf p {
+    font-size: 2.5rem; /* Usamos rem */
+    font-family: sans-serif;
+    color: rgba(53, 174, 245, 0.788);
+    grid-column: 2 / 3;
+    align-self: flex-end;
+    line-height: 1; /* Para evitar espacio extra */
+}
+
+.card_inf_grf h2 {
+    color: rgba(28, 231, 28, 0.753);
+    font-size: 1.25rem; /* Usamos rem */
+    font-family: sans-serif;
+    grid-column: 2 / 3;
+    align-self: flex-start;
+}
+.icon_grf {
+    border: 1px solid rgba(0, 0, 0, 0.651);
+    width: 40px;
+    height: 40px;
+    grid-row: span 2;
+    align-self: center;
+    justify-self: center;
+    border-radius: 5px;
+}
+
+.grf_reporte {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Adaptamos para responsividad */
+    gap: 1rem;
+}
+
+.grf_past {
+    height: 300px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+/* ==== FIN ESTILOS PARA LA SECCIÓN DE GRÁFICAS ================== */
