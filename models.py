@@ -1,7 +1,7 @@
 import datetime as dt
 import psycopg2, os, platform
 import pandas as pd
-import pymysql
+import pymysql, shutil
 import pymysql.cursors
 
 # URL de conexión a PostgreSQL (Supabase)  nO2KMyzrxfvFQv8K ; CBoQbbb7KfXsOYzN
