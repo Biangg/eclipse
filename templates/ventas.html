@@ -46,6 +46,7 @@
         const btnComprar = document.getElementById("btnComprar");
         const impuestos = document.getElementById("impuestos");
         const ttl = document.getElementById("ttl");
+        const pilaDiv = document.getElementById("pila");
         selecsionados = []
         total = []
         ganacia = []
@@ -98,7 +99,6 @@
 
         
         function actualizarPila(){
-            const pilaDiv = document.getElementById("pila");
             pilaDiv.innerHTML = '';
             
             for (let i = (selecsionados.length -1); i>= 0; i--){
@@ -129,7 +129,28 @@
         }
 
         function comprar(){
-            
+            datos = {
+                "total" : total,
+                "id_usuario" : `{{yo['id'][0]}}`,
+                "id_cliente" : '0'
+            }
+            $.ajax({
+                    url : '/ventas',
+                    contentType: 'application/json',
+                    data : JSON.stringify(datos),
+                    type : 'POST',
+                    success : function(response){
+                    },
+                    error : function(error){
+                    }
+                });
+            total = 0
+            ttl.innerHTML = ''
+            selecsionados = []
+            pilaDiv.innerHTML = ''
+            ganacia = 0
+            impuestos.innerHTML = ''
+            alert("venta efectuada")
         }
     </script>
 {% endblock %}
