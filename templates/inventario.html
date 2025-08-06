@@ -43,10 +43,13 @@
             <!-- Aquí agregaré una gráfica para comparar los productos más caros con los baratos y ver cuál se vende más -->
         </div>
 
+        <div id="line-chart" class="grf_info">
+            <h2>Ventans Diarias</h2>
+        </div>
+
     </div>
 
     <script>
-        // Agregar el script para los gráficos
         document.addEventListener('DOMContentLoaded', function() {
 
     // Debounce function para optimizar el redimensionamiento
@@ -80,34 +83,39 @@
         { producto: 'Agua mineral', tipo: 'Barato', unidades: 60 }
     ];
 
+    // Datos para el nuevo gráfico de línea (Ventas diarias)
+    const dataVentasDiarias = [
+        { fecha: new Date('2025-07-28'), ventas: 150 },
+        { fecha: new Date('2025-07-29'), ventas: 220 },
+        { fecha: new Date('2025-07-30'), ventas: 180 },
+        { fecha: new Date('2025-07-31'), ventas: 300 },
+        { fecha: new Date('2025-08-01'), ventas: 250 },
+        { fecha: new Date('2025-08-02'), ventas: 400 },
+        { fecha: new Date('2025-08-03'), ventas: 320 }
+    ];
+
     // Función para crear el Gráfico de Pastel
     function drawPieChart() {
-        // Limpiamos el SVG anterior si existe
         d3.select('#Pastel-1 svg').remove();
         d3.select('#Pastel-1 .legend').remove();
-
+        // ... (código del gráfico de pastel) ...
         const pieChart1 = d3.select('#Pastel-1');
         const margin = { top: 20, right: 20, bottom: 20, left: 20 };
         const width = pieChart1.node().getBoundingClientRect().width - margin.left - margin.right;
         const height = pieChart1.node().getBoundingClientRect().height - 50 - margin.top - margin.bottom;
         const radius = Math.min(width, height) / 2;
-
         const svg1 = pieChart1.append('svg')
             .attr('width', width + margin.left + margin.right)
             .attr('height', height + margin.top + margin.bottom)
             .append('g')
             .attr('transform', `translate(${width / 2 + margin.left}, ${height / 2 + margin.top})`);
-
         const color1 = d3.scaleOrdinal()
             .domain(dataCategorias.map(d => d.categoria))
             .range(d3.schemeCategory10);
-
         const pie1 = d3.pie().value(d => d.valor)(dataCategorias);
-        
         const arc1 = d3.arc()
             .innerRadius(0)
             .outerRadius(radius);
-
         svg1.selectAll('path')
             .data(pie1)
             .enter()
@@ -116,7 +124,6 @@
             .attr('fill', d => color1(d.data.categoria))
             .attr('stroke', 'white')
             .style('stroke-width', '2px');
-
         const legend1 = pieChart1.append('div').attr('class', 'legend').style('margin-top', '10px');
         legend1.selectAll('div')
             .data(dataCategorias)
@@ -130,34 +137,28 @@
     // Función para crear el Gráfico de Barras Horizontales
     function drawHorizontalBarChart() {
         d3.select('#Pastel-2 svg').remove();
-
+        // ... (código del gráfico de barras horizontales) ...
         const barChart1 = d3.select('#Pastel-2');
         const margin2 = { top: 20, right: 30, bottom: 40, left: 120 };
         const width2 = barChart1.node().getBoundingClientRect().width - margin2.left - margin2.right;
         const height2 = barChart1.node().getBoundingClientRect().height - 50 - margin2.top - margin2.bottom;
-
         const svg2 = barChart1.append('svg')
             .attr('width', width2 + margin2.left + margin2.right)
             .attr('height', height2 + margin2.top + margin2.bottom)
             .append('g')
             .attr('transform', `translate(${margin2.left}, ${margin2.top})`);
-
         const x2 = d3.scaleLinear()
             .domain([0, d3.max(dataProductos, d => d.unidades)]).nice()
             .range([0, width2]);
-
         const y2 = d3.scaleBand()
             .domain(dataProductos.map(d => d.producto))
             .range([0, height2])
             .padding(0.1);
-
         svg2.append('g')
             .call(d3.axisLeft(y2));
-
         svg2.append('g')
             .attr('transform', `translate(0, ${height2})`)
             .call(d3.axisBottom(x2));
-
         svg2.selectAll('rect')
             .data(dataProductos)
             .enter()
@@ -173,38 +174,31 @@
     function drawComparisonBarChart() {
         d3.select('.grf_vs svg').remove();
         d3.select('.grf_vs .legend').remove();
-
+        // ... (código del gráfico de barras de comparación) ...
         const barChart2 = d3.select('.grf_vs');
         const margin3 = { top: 20, right: 30, bottom: 40, left: 40 };
         const width3 = barChart2.node().getBoundingClientRect().width - margin3.left - margin3.right;
         const height3 = barChart2.node().getBoundingClientRect().height - 50 - margin3.top - margin3.bottom;
-        
         const svg3 = barChart2.append('svg')
             .attr('width', width3 + margin3.left + margin3.right)
             .attr('height', height3 + margin3.top + margin3.bottom)
             .append('g')
             .attr('transform', `translate(${margin3.left}, ${margin3.top})`);
-
         const x3 = d3.scaleBand()
             .domain(dataComparacion.map(d => d.producto))
             .range([0, width3])
             .padding(0.1);
-        
         const y3 = d3.scaleLinear()
             .domain([0, d3.max(dataComparacion, d => d.unidades)]).nice()
             .range([height3, 0]);
-
         const color3 = d3.scaleOrdinal()
             .domain(['Caro', 'Barato'])
             .range(['#d32f2f', '#4caf50']);
-        
         svg3.append('g')
             .attr('transform', `translate(0, ${height3})`)
             .call(d3.axisBottom(x3));
-
         svg3.append('g')
             .call(d3.axisLeft(y3));
-        
         svg3.selectAll('rect')
             .data(dataComparacion)
             .enter()
@@ -214,7 +208,6 @@
             .attr('width', x3.bandwidth())
             .attr('height', d => height3 - y3(d.unidades))
             .attr('fill', d => color3(d.tipo));
-
         const legend3 = barChart2.append('div').attr('class', 'legend').style('margin-top', '10px');
         legend3.selectAll('div')
             .data(['Caro', 'Barato'])
@@ -225,20 +218,68 @@
             .html(d => `<span style="background-color: ${color3(d)}; width: 15px; height: 15px; margin-right: 5px;"></span> ${d}`);
     }
 
+    // NUEVA FUNCIÓN: Gráfico de Línea
+    function drawLineChart() {
+        d3.select('#line-chart svg').remove();
+
+        const lineChartContainer = d3.select('#line-chart');
+        const margin = { top: 20, right: 30, bottom: 40, left: 40 };
+        const width = lineChartContainer.node().getBoundingClientRect().width - margin.left - margin.right;
+        const height = lineChartContainer.node().getBoundingClientRect().height - 50 - margin.top - margin.bottom;
+
+        const svg = lineChartContainer.append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom)
+            .append('g')
+            .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+        // Escalas para el eje X (tiempo) y el eje Y (ventas)
+        const x = d3.scaleTime()
+            .domain(d3.extent(dataVentasDiarias, d => d.fecha))
+            .range([0, width]);
+
+        const y = d3.scaleLinear()
+            .domain([0, d3.max(dataVentasDiarias, d => d.ventas)]).nice()
+            .range([height, 0]);
+
+        // Ejes X e Y
+        svg.append('g')
+            .attr('transform', `translate(0, ${height})`)
+            .call(d3.axisBottom(x));
+
+        svg.append('g')
+            .call(d3.axisLeft(y));
+
+        // Generador de la línea
+        const line = d3.line()
+            .x(d => x(d.fecha))
+            .y(d => y(d.ventas));
+
+        // Dibujar la línea
+        svg.append('path')
+            .datum(dataVentasDiarias)
+            .attr('fill', 'none')
+            .attr('stroke', 'steelblue')
+            .attr('stroke-width', 3)
+            .attr('d', line);
+    }
+
     // Llamamos a las funciones para dibujar los gráficos la primera vez
     drawPieChart();
     drawHorizontalBarChart();
     drawComparisonBarChart();
+    drawLineChart(); // <-- Se llama a la nueva función
 
     // Vinculamos las funciones de dibujo al evento de redimensionamiento
-    // Usamos debounce para optimizar el rendimiento
     const handleResize = debounce(() => {
         drawPieChart();
         drawHorizontalBarChart();
         drawComparisonBarChart();
+        drawLineChart(); // <-- Se actualiza al redimensionar
     });
 
     window.addEventListener('resize', handleResize);
 });
     </script>
+
 {% endblock %}
