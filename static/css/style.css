@@ -64,7 +64,8 @@ header {
 }
 
 nav {
-    height: 250px;
+    min-height: 250px;
+    overflow: hidden;
 }
 .nav {
     width: 100%;
@@ -701,6 +702,7 @@ main {
 
 
 /* A la camame fuí......  */
+
 
 
 
