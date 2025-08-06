@@ -119,7 +119,7 @@ main {
     height: 100vh;
     padding: 1rem;
     width: 100%;
-    min-height: 100vh;
+    height: 100%;
     overflow: hidden;
 }
 
@@ -699,5 +699,6 @@ main {
 
 
 /* A la camame fuí......  */
+
 
 
