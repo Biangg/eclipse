@@ -34,7 +34,7 @@
 
 .card_inf_grf {
     height: 110px;
-    background-color: white;
+    background-color: transparent;
     padding: 1rem;
     border-radius: 10px;
     display: grid;
@@ -85,3 +85,4 @@
 }
 
 /* ==== FIN ESTILOS PARA LA SECCIÓN DE GRÁFICAS ================== */
+
