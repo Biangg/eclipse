@@ -110,7 +110,7 @@
                             let texto = '';
                             response.forEach((item, idx) => {
                             texto += `
-                            <button ondblclick='addElemento(this)' style="border-radius: 10px; box-sizing: border-box; padding: 40px; background-size: 70px;background-repeat: no-repeat;
+                            <button ondblclick='addElemento(this)' style="border-radius: 10px; box-sizing: border-box; padding: 40px; background-size: coverx;background-repeat: no-repeat;
                             background-image: url(../static/image/productos/${item.id_categoria}/${item.imagen}); background-position: center; margin: 10px;" 
                             class="${item.id_producto}" id="folder"><b style = 'top: 72px;' class='${item.precio_unitario}' >${item.nombre}</b></button>`
                             });
