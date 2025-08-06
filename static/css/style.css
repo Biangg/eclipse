@@ -16,7 +16,6 @@
 /* =================== LAYOUT PRINCIPAL =================== */
 .main {
     display: flex;
-    overflow: hidden;
 }
 
 ul, li, a {
@@ -700,4 +699,5 @@ main {
 
 
 /* A la camame fuí......  */
+
 
