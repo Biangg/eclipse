@@ -25,6 +25,7 @@ body{
 }
 .lateral{
     width: 70px;
+    min-width: 70px;
     border-right: 1px solid white;
     background-color: rgba(128, 128, 128, 0.801);
     display: flex;
