@@ -4,6 +4,12 @@
     padding: 0px;
     font-family: sans-serif;
 }
+@media (max-width: 786px) {
+    .contenido{
+        display: none;}
+    .lateral{
+        display: none;}
+}
 body{
     height: 100vh;
     background-color: rgb(59, 59, 59);
