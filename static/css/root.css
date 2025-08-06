@@ -27,6 +27,7 @@ body{
 }
 .contenido{
     width: 100%;
+    min-height: 100vh;
     background: linear-gradient(to bottom right, rgba(66, 66, 66, 0.836), rgba(204, 204, 204, 0.836));
     backdrop-filter: blur(100px);
     overflow-y: auto;
