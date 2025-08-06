@@ -16,6 +16,7 @@
 /* =================== LAYOUT PRINCIPAL =================== */
 .main {
     display: flex;
+    min-height: 100%;
 }
 
 ul, li, a {
@@ -696,5 +697,6 @@ main {
 /* FIN DE LOS ESTILOS DE MOMENTO */
 /* Bata, a 01/08/2025 */
 /* 22:22 p.m */
+
 
 /* A la camame fuí......  */
