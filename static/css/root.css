@@ -23,6 +23,7 @@ body{
     width: 100%;
     background: linear-gradient(to bottom right, rgba(66, 66, 66, 0.836), rgba(204, 204, 204, 0.836));
     backdrop-filter: blur(100px);
+    overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: blue transparent; 
 }
