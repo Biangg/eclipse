@@ -63,6 +63,9 @@ header {
     margin-left: -40px;
 }
 
+nav {
+    height: 200px;
+}
 .nav {
     width: 100%;
     display: flex;
@@ -698,6 +701,7 @@ main {
 
 
 /* A la camame fuí......  */
+
 
 
 
