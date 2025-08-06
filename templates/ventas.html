@@ -9,6 +9,15 @@
             <input type="hidden" name="folder" id="nFolder">
         </form>
     </div>
+    <div id="menu" class="menu_contextual">
+        <p>Abrir</p>
+        <p>cambiar nombre</p>
+        <p>eliminar</p>
+        <p>editar</p>
+        <p>ver en stock</p>
+        <hr>
+        <p>propiedades</p>
+    </div>
     <div class="superior">
         <button> <img style="width: 20px; margin-right: 5px;" src="../static/icons/search.png" alt=""><b style="color: white;">Buscar</b></button>
         <button> <img style="width: 20px; margin-right: 5px;" src="../static/icons/comment-alt-dots.png" alt=""><b style="color: white;">Comentario</b></button>
@@ -46,6 +55,7 @@
         const btnComprar = document.getElementById("btnComprar");
         const impuestos = document.getElementById("impuestos");
         const ttl = document.getElementById("ttl");
+        const menu = document.getElementById("menu");
         const pilaDiv = document.getElementById("pila");
         selecsionados = []
         total = []
@@ -59,6 +69,25 @@
         btnComprar.addEventListener("click", function(){ comprar() })
 
         for(i = 0; i < panel.children.length; i++){
+            panel.children[i].addEventListener("contextmenu", function (e) {
+                e.preventDefault(); // Evita el menú predeterminado
+
+                // Obtener posición y tamaño del botón
+                const rect = this.getBoundingClientRect();
+
+                // Posicionar el menú arriba del botón
+                const top = window.scrollY + rect.top + (menu.offsetHeight / 2);
+                const left = window.scrollX + rect.left;
+                menu.style.top = `${top}px`;
+                menu.style.left = `${left}px`;
+                menu.style.display = "block";
+            });
+            document.addEventListener("contextmenu", function (e) {
+                   e.preventDefault();
+            });
+
+
+            
             panel.children[i].addEventListener("dblclick", function(){
                 tipo = this.id
                 nombre = this.className
@@ -108,9 +137,10 @@
                 item.className = "row"
                 item.append(texto)
                 item.append(precio)
-                precio.className = " precio"
+                precio.className = "precio"
+                texto.className = "producto"
                 texto.textContent = selecsionados[i][0]
-                precio.textContent = selecsionados[i][1]
+                precio.textContent = selecsionados[i][1] + 'xaf'
                 pilaDiv.append(item)
             }
         }
@@ -152,5 +182,12 @@
             impuestos.innerHTML = ''
             alert("venta efectuada")
         }
+
+document.addEventListener("click", function (e) {
+  if (!menu.contains(e.target)) {
+    menu.style.display = "none";
+  }
+});
+
     </script>
 {% endblock %}

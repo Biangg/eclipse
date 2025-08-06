@@ -7,15 +7,14 @@
 .superior > button{
     display: flex;
     align-items: center;
-    background-color: rgb(59, 59, 59);
-    border: 1px solid rgb(44, 44, 44);
+    background-color: rgba(185, 185, 185, 0.801);
     cursor: pointer;
     margin: 0px 5px;
     padding: 20px;
     transition: 200ms;
 }
 .superior > button:hover{
-    background: rgb(44, 44, 44);
+    background: gray;
     transition: 200ms;
     height: 100%;
 }
@@ -47,7 +46,9 @@
 }
 .panel{
     width: 100%;
-    background-color: rgb(92, 92, 92);
+    background-color: rgba(92, 92, 92, 0.459);
+    margin-right: 10px;
+    border-radius: 10px;
     height: 100%;
 }
 #folder{
@@ -70,13 +71,35 @@
     box-sizing: border-box;
     padding: 10px;
     display: flex;
+    justify-content: center;
     width: 100%;
 }
-.row p{
-    font-family: monospace;
+
+.row .producto{
+    width: 100%;
+}
+.menu_contextual{
+    position: absolute;
+    display: none;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+    z-index: 1000;
+    min-width: 150px;
+    box-sizing: border-box;
+    padding: 6px;
+    border-radius: 6px;
+}
+.menu_contextual p{
+    padding: 6px 5px;
+    text-decoration: none;
+    margin: 2px 0px;
+    cursor: pointer;
+    transition: 50ms;
+}
+.menu_contextual p:hover {
+    background-color: #474747;
     color: white;
-    width: 100%;
-}
-.row .precio{
-    width: 30%;
+    border-radius: 5px;
+    transition: 50ms;
 }

@@ -1,48 +1,244 @@
-{% extends "base.html" %}
+
+{% extends "root.html" %}
+{% block title %} Gráficas {% endblock %}
 
 {% block content %}
-<div id="Inventario" class="section_main">
-    <div class="section_header inventario_header">
-        <h2>Inventario</h2>
-        <p class="nota">
-            Configura el control de stock, alertas y categorías de productos.
-        </p>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/grf.css') }}">
+    
+    <script src="{{ url_for('static', filename='js/d3.v7.min.js') }}"></script>
+
+    <div id="Graficas" class="cont_grf">
+        <div class="grf_datos">
+            <div class="card_inf_grf">
+                <i class="icon_grf"></i>
+                <p>400</p>
+                <h2>En Stock</h2>
+            </div>
+            <div class="card_inf_grf">
+                <i class="icon_grf"></i>
+                <p>500</p>
+                <h2>En venta</h2>
+            </div>
+            <div class="card_inf_grf">
+                <i class="icon_grf"></i>
+                <p>200</p>
+                <h2>Vendido</h2>
+            </div>
+        </div>
+
+        <div class="grf_info grf_reporte">
+            <div id="Pastel-1" class="grf_past">
+                <h2>Categorías más vendidas</h2>
+                <!-- Gráfica circular con las categorías más vendidas en porcentajes y notas en colores para cada categoría para identificar las categorías Ej [Licores, batidos, refrescos, cervezas] -->
+            </div>
+            <div id="Pastel-2" class="grf_past">
+                <h2>Productos más vendidos</h2>
+                <!-- Top 10 productos más vendidas y el total unitario de cada uno Ej [Ron con cola: 84, Fanta Piña: 35, Batido de limón : 10] -->
+            </div>
+        </div>
+
+        <div class="grf_info grf_vs">
+            <h2>Productos más caros vs Barratos</h2>
+            <!-- Aquí agregaré una gráfica para comparar los productos más caros con los baratos y ver cuál se vende más -->
+        </div>
+
     </div>
 
-    <div class="inventario_container">
-        <div class="inventario_opciones">
-            <div class="inventario_switch">
-                <label for="control_stock">Activar control de stock</label>
-                <input type="checkbox" id="control_stock">
-            </div>
-            <div class="inventario_switch">
-                <label for="alerta_stock">Activar alertas por bajo stock</label>
-                <input type="checkbox" id="alerta_stock">
-            </div>
-        </div>
+    <script>
+        // Agregar el script para los gráficos
+        document.addEventListener('DOMContentLoaded', function() {
 
-        <div class="inventario_categorias">
-            <h3>Categorías de producto</h3>
-            <div class="categorias_form">
-                <input type="text" id="nueva_categoria" placeholder="Nueva categoría">
-                <button class="btn_guardar" id="btn_agregar_categoria">Agregar</button>
-            </div>
-            <ul class="categorias_lista">
-                <li>Licor <button class="btn_eliminar_categoria">Eliminar</button></li>
-                <li>Tinto <button class="btn_eliminar_categoria">Eliminar</button></li>
-                <li>Batido <button class="btn_eliminar_categoria">Eliminar</button></li>
-            </ul>
-        </div>
+    // Debounce function para optimizar el redimensionamiento
+    function debounce(func, timeout = 300) {
+        let timer;
+        return (...args) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => { func.apply(this, args); }, timeout);
+        };
+    }
 
-        <div class="inventario_unidades">
-            <h3>Unidad predeterminada</h3>
-            <select id="unidad_predeterminada">
-                <option value="pieza">Pieza</option>
-                <option value="kg">Kilogramo</option>
-                <option value="lt">Litro</option>
-                <option value="m">Metro</option>
-            </select>
-        </div>
-    </div>
-</div>
+    // Datos de ejemplo
+    const dataCategorias = [
+        { categoria: 'Licores', valor: 45 },
+        { categoria: 'Batidos', valor: 20 },
+        { categoria: 'Refrescos', valor: 25 },
+        { categoria: 'Cervezas', valor: 10 }
+    ];
+
+    const dataProductos = [
+        { producto: 'Ron con Cola', unidades: 84 },
+        { producto: 'Fanta Piña', unidades: 35 },
+        { producto: 'Batido de Limón', unidades: 10 },
+        { producto: 'Cerveza Estrella', unidades: 60 }
+    ];
+
+    const dataComparacion = [
+        { producto: 'Ron con Cola', tipo: 'Caro', unidades: 15 },
+        { producto: 'Fanta Piña', tipo: 'Barato', unidades: 75 },
+        { producto: 'Ginebra Premium', tipo: 'Caro', unidades: 25 },
+        { producto: 'Agua mineral', tipo: 'Barato', unidades: 60 }
+    ];
+
+    // Función para crear el Gráfico de Pastel
+    function drawPieChart() {
+        // Limpiamos el SVG anterior si existe
+        d3.select('#Pastel-1 svg').remove();
+        d3.select('#Pastel-1 .legend').remove();
+
+        const pieChart1 = d3.select('#Pastel-1');
+        const margin = { top: 20, right: 20, bottom: 20, left: 20 };
+        const width = pieChart1.node().getBoundingClientRect().width - margin.left - margin.right;
+        const height = pieChart1.node().getBoundingClientRect().height - 50 - margin.top - margin.bottom;
+        const radius = Math.min(width, height) / 2;
+
+        const svg1 = pieChart1.append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom)
+            .append('g')
+            .attr('transform', `translate(${width / 2 + margin.left}, ${height / 2 + margin.top})`);
+
+        const color1 = d3.scaleOrdinal()
+            .domain(dataCategorias.map(d => d.categoria))
+            .range(d3.schemeCategory10);
+
+        const pie1 = d3.pie().value(d => d.valor)(dataCategorias);
+        
+        const arc1 = d3.arc()
+            .innerRadius(0)
+            .outerRadius(radius);
+
+        svg1.selectAll('path')
+            .data(pie1)
+            .enter()
+            .append('path')
+            .attr('d', arc1)
+            .attr('fill', d => color1(d.data.categoria))
+            .attr('stroke', 'white')
+            .style('stroke-width', '2px');
+
+        const legend1 = pieChart1.append('div').attr('class', 'legend').style('margin-top', '10px');
+        legend1.selectAll('div')
+            .data(dataCategorias)
+            .enter()
+            .append('div')
+            .style('display', 'flex')
+            .style('align-items', 'center')
+            .html(d => `<span style="background-color: ${color1(d.categoria)}; width: 15px; height: 15px; margin-right: 5px;"></span> ${d.categoria}: ${d.valor}%`);
+    }
+
+    // Función para crear el Gráfico de Barras Horizontales
+    function drawHorizontalBarChart() {
+        d3.select('#Pastel-2 svg').remove();
+
+        const barChart1 = d3.select('#Pastel-2');
+        const margin2 = { top: 20, right: 30, bottom: 40, left: 120 };
+        const width2 = barChart1.node().getBoundingClientRect().width - margin2.left - margin2.right;
+        const height2 = barChart1.node().getBoundingClientRect().height - 50 - margin2.top - margin2.bottom;
+
+        const svg2 = barChart1.append('svg')
+            .attr('width', width2 + margin2.left + margin2.right)
+            .attr('height', height2 + margin2.top + margin2.bottom)
+            .append('g')
+            .attr('transform', `translate(${margin2.left}, ${margin2.top})`);
+
+        const x2 = d3.scaleLinear()
+            .domain([0, d3.max(dataProductos, d => d.unidades)]).nice()
+            .range([0, width2]);
+
+        const y2 = d3.scaleBand()
+            .domain(dataProductos.map(d => d.producto))
+            .range([0, height2])
+            .padding(0.1);
+
+        svg2.append('g')
+            .call(d3.axisLeft(y2));
+
+        svg2.append('g')
+            .attr('transform', `translate(0, ${height2})`)
+            .call(d3.axisBottom(x2));
+
+        svg2.selectAll('rect')
+            .data(dataProductos)
+            .enter()
+            .append('rect')
+            .attr('x', 0)
+            .attr('y', d => y2(d.producto))
+            .attr('width', d => x2(d.unidades))
+            .attr('height', y2.bandwidth())
+            .attr('fill', 'steelblue');
+    }
+
+    // Función para crear el Gráfico de Barras de Comparación
+    function drawComparisonBarChart() {
+        d3.select('.grf_vs svg').remove();
+        d3.select('.grf_vs .legend').remove();
+
+        const barChart2 = d3.select('.grf_vs');
+        const margin3 = { top: 20, right: 30, bottom: 40, left: 40 };
+        const width3 = barChart2.node().getBoundingClientRect().width - margin3.left - margin3.right;
+        const height3 = barChart2.node().getBoundingClientRect().height - 50 - margin3.top - margin3.bottom;
+        
+        const svg3 = barChart2.append('svg')
+            .attr('width', width3 + margin3.left + margin3.right)
+            .attr('height', height3 + margin3.top + margin3.bottom)
+            .append('g')
+            .attr('transform', `translate(${margin3.left}, ${margin3.top})`);
+
+        const x3 = d3.scaleBand()
+            .domain(dataComparacion.map(d => d.producto))
+            .range([0, width3])
+            .padding(0.1);
+        
+        const y3 = d3.scaleLinear()
+            .domain([0, d3.max(dataComparacion, d => d.unidades)]).nice()
+            .range([height3, 0]);
+
+        const color3 = d3.scaleOrdinal()
+            .domain(['Caro', 'Barato'])
+            .range(['#d32f2f', '#4caf50']);
+        
+        svg3.append('g')
+            .attr('transform', `translate(0, ${height3})`)
+            .call(d3.axisBottom(x3));
+
+        svg3.append('g')
+            .call(d3.axisLeft(y3));
+        
+        svg3.selectAll('rect')
+            .data(dataComparacion)
+            .enter()
+            .append('rect')
+            .attr('x', d => x3(d.producto))
+            .attr('y', d => y3(d.unidades))
+            .attr('width', x3.bandwidth())
+            .attr('height', d => height3 - y3(d.unidades))
+            .attr('fill', d => color3(d.tipo));
+
+        const legend3 = barChart2.append('div').attr('class', 'legend').style('margin-top', '10px');
+        legend3.selectAll('div')
+            .data(['Caro', 'Barato'])
+            .enter()
+            .append('div')
+            .style('display', 'flex')
+            .style('align-items', 'center')
+            .html(d => `<span style="background-color: ${color3(d)}; width: 15px; height: 15px; margin-right: 5px;"></span> ${d}`);
+    }
+
+    // Llamamos a las funciones para dibujar los gráficos la primera vez
+    drawPieChart();
+    drawHorizontalBarChart();
+    drawComparisonBarChart();
+
+    // Vinculamos las funciones de dibujo al evento de redimensionamiento
+    // Usamos debounce para optimizar el rendimiento
+    const handleResize = debounce(() => {
+        drawPieChart();
+        drawHorizontalBarChart();
+        drawComparisonBarChart();
+    });
+
+    window.addEventListener('resize', handleResize);
+});
+    </script>
 {% endblock %}

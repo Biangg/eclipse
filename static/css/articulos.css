@@ -8,15 +8,14 @@
 .superior > button{
     display: flex;
     align-items: center;
-    background-color: rgb(59, 59, 59);
-    border: 1px solid rgb(44, 44, 44);;
+    background-color: rgba(185, 185, 185, 0.801);
     cursor: pointer;
     margin: 0px 5px;
     padding: 20px;
     transition: 200ms;
 }
 .superior > button:hover{
-    background: rgb(44, 44, 44);
+    background: gray;
     transition: 200ms;
     height: 100%;
 }
@@ -32,7 +31,7 @@
 .panel{
     box-sizing: border-box;
     width: 100%;
-    background-color: rgb(70, 70, 70);
+    background-color: rgba(92, 92, 92, 0.459);
     height: 100%;
     padding: 10px;
 }

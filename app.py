@@ -77,6 +77,19 @@ def ventas():
         return make_response(render_template('ajustes.html', categorias = categorias, yo = yo))
     return render_template('login.html')
 
+@app.route('/inventario', methods=['POST', 'GET'])
+def inventario():
+    if request.method == 'POST':
+        datos = request.get_json()
+        tabla = pd.DataFrame([datos])
+        models.Crear.venta(tabla['total'][0],tabla['id_usuario'][0],tabla['id_cliente'][0])
+        return jsonify({"estado" : 0})
+    if 'password' in session and 'usuario' in session:
+        yo = models.Usuarios.yo(session['usuario'], session['password'])
+        categorias = models.Cargador.categorias()
+        return make_response(render_template('inventario.html', categorias = categorias, yo = yo))
+    return render_template('login.html')
+
 @app.route('/ajustes')
 def config():
     if 'password' in session and 'usuario' in session:
@@ -117,4 +130,4 @@ def cargar():
         return jsonify(tabla)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=80)
+    app.run(debug=True, port=8080)
