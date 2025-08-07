@@ -28,8 +28,8 @@ body{
 .contenido{
     width: 100%;
     max-height: 100vh;
-    background: linear-gradient(to bottom right, rgba(66, 66, 66, 0.80), rgba(204, 204, 204, 0.9));
-    backdrop-filter: blur(100px);
+    background: linear-gradient(to bottom right, rgba(66, 66, 66, 0.80), rgba(204, 204, 204, 0.7));
+    backdrop-filter: blur(90px);
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: blue transparent; 
