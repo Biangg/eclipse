@@ -105,6 +105,10 @@ def articulos():
         return make_response(render_template('articulos.html', categorias = categorias))
     return render_template('login.html')
 
+@app.route('/carpetas')
+def carpetas():
+    categorias = categorias = models.Cargador.categorias()
+    return render_template('fragmentos/carpetas.html', categorias = categorias)
 
 directorio_actual = os.path.dirname(os.path.abspath(__file__))
 nombre_script = os.path.basename(__file__)
