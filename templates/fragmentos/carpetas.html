@@ -1,0 +1,7 @@
+
+{% for i in range(categorias.shape[0])%}
+                <button style="box-sizing: border-box; padding: 40px; background-size: 70px;background-repeat: no-repeat;
+                background-image: url(../static/icons/folder.png); background-position: center; margin: 10px;" 
+                class="{{categorias['id_categoria'][i]}}" id="folder"><b>{{categorias['nombre_categoria'][i]}}</b></button>
+            {%endfor%}
+
