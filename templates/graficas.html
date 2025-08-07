@@ -54,7 +54,7 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+   document.addEventListener('DOMContentLoaded', function() {
 
     // Debounce function para optimizar el redimensionamiento
     function debounce(func, timeout = 300) {
@@ -261,9 +261,13 @@
             .call(d3.axisBottom(x));
         svg.append('g')
             .call(d3.axisLeft(y));
+        
+        // CORRECCIÓN: para agregar la función de curva d3.curveMonotoneX
         const line = d3.line()
+            .curve(d3.curveMonotoneX) // Esto hace la línea curva
             .x(d => x(d.fecha))
             .y(d => y(d.ventas));
+
         svg.append('path')
             .datum(dataVentasDiarias)
             .attr('fill', 'none')
@@ -351,25 +355,26 @@
             .style('fill', 'rgba(75, 192, 192, 0.7)');
     }
 
-    // Llamamo a las funciones para dibujar todos los gráficos la primera vez
+    // Llamo a las funciones para dibujar todos los gráficos la primera vez
     drawPieChart();
     drawHorizontalBarChart();
     drawComparisonBarChart();
     drawLineChart();
-    drawScatterPlot(); // <-- Nuevo
-    drawBubbleChart(); // <-- Nuevo
+    drawScatterPlot();
+    drawBubbleChart();
 
-    // Para vinculo las funciones de dibujo al evento de redimensionamiento
+    // Vinculo las funciones de dibujo al evento de redimensionamiento
     const handleResize = debounce(() => {
         drawPieChart();
         drawHorizontalBarChart();
         drawComparisonBarChart();
         drawLineChart();
-        drawScatterPlot(); // <-- Se actualiza al redimensionar
-        drawBubbleChart(); // <-- Se actualiza al redimensionar
+        drawScatterPlot();
+        drawBubbleChart();
     });
 
     window.addEventListener('resize', handleResize);
 });
     </script>
 {% endblock %}
+
