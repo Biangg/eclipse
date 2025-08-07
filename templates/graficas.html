@@ -30,23 +30,30 @@
         <div class="grf_info grf_reporte">
             <div id="Pastel-1" class="grf_past">
                 <h2>Categorías más vendidas</h2>
-                <!-- Gráfica circular con las categorías más vendidas en porcentajes y notas en colores para cada categoría para identificar las categorías Ej [Licores, batidos, refrescos, cervezas] -->
             </div>
             <div id="Pastel-2" class="grf_past">
                 <h2>Productos más vendidos</h2>
-                <!-- Top 10 productos más vendidas y el total unitario de cada uno Ej [Ron con cola: 84, Fanta Piña: 35, Batido de limón : 10] -->
             </div>
         </div>
 
         <div class="grf_info grf_vs">
-            <h2>Productos más caros vs Barratos</h2>
-            <!-- Aquí agregaré una gráfica para comparar los productos más caros con los baratos y ver cuál se vende más -->
+            <h2>Productos más caros vs Baratos</h2>
         </div>
 
+        <div id="line-chart" class="grf_info">
+            <h2>Ventas Diarias</h2>
+        </div>
+        
+        <div id="scatter-plot" class="grf_info">
+            <h2>Precio vs. Cantidad Vendida</h2>
+        </div>
+
+        <div id="bubble-chart" class="grf_info">
+            <h2>Productos por Stock, Precio y Demanda</h2>
+        </div>
     </div>
 
     <script>
-        // Agregar el script para los gráficos
         document.addEventListener('DOMContentLoaded', function() {
 
     // Debounce function para optimizar el redimensionamiento
@@ -80,34 +87,57 @@
         { producto: 'Agua mineral', tipo: 'Barato', unidades: 60 }
     ];
 
+    const dataVentasDiarias = [
+        { fecha: new Date('2025-07-28'), ventas: 150 },
+        { fecha: new Date('2025-07-29'), ventas: 220 },
+        { fecha: new Date('2025-07-30'), ventas: 180 },
+        { fecha: new Date('2025-07-31'), ventas: 300 },
+        { fecha: new Date('2025-08-01'), ventas: 250 },
+        { fecha: new Date('2025-08-02'), ventas: 400 },
+        { fecha: new Date('2025-08-03'), ventas: 320 }
+    ];
+    
+    // Datos para el diagrama de dispersión
+    const dataDispersión = [
+        { precio: 5, ventas: 100 },
+        { precio: 10, ventas: 80 },
+        { precio: 20, ventas: 50 },
+        { precio: 15, ventas: 70 },
+        { precio: 8, ventas: 120 },
+        { precio: 25, ventas: 40 },
+        { precio: 12, ventas: 95 }
+    ];
+
+    // Datos para el gráfico de burbujas
+    const dataBurbujas = [
+        { producto: 'Ron', stock: 150, precio: 25, demanda: 75 },
+        { producto: 'Agua', stock: 500, precio: 2, demanda: 200 },
+        { producto: 'Cerveza', stock: 300, precio: 8, demanda: 150 },
+        { producto: 'Ginebra', stock: 80, precio: 30, demanda: 40 },
+        { producto: 'Refresco', stock: 250, precio: 5, demanda: 100 }
+    ];
+
     // Función para crear el Gráfico de Pastel
     function drawPieChart() {
-        // Limpiamos el SVG anterior si existe
         d3.select('#Pastel-1 svg').remove();
         d3.select('#Pastel-1 .legend').remove();
-
         const pieChart1 = d3.select('#Pastel-1');
         const margin = { top: 20, right: 20, bottom: 20, left: 20 };
         const width = pieChart1.node().getBoundingClientRect().width - margin.left - margin.right;
         const height = pieChart1.node().getBoundingClientRect().height - 50 - margin.top - margin.bottom;
         const radius = Math.min(width, height) / 2;
-
         const svg1 = pieChart1.append('svg')
             .attr('width', width + margin.left + margin.right)
             .attr('height', height + margin.top + margin.bottom)
             .append('g')
             .attr('transform', `translate(${width / 2 + margin.left}, ${height / 2 + margin.top})`);
-
         const color1 = d3.scaleOrdinal()
             .domain(dataCategorias.map(d => d.categoria))
             .range(d3.schemeCategory10);
-
         const pie1 = d3.pie().value(d => d.valor)(dataCategorias);
-        
         const arc1 = d3.arc()
             .innerRadius(0)
             .outerRadius(radius);
-
         svg1.selectAll('path')
             .data(pie1)
             .enter()
@@ -116,7 +146,6 @@
             .attr('fill', d => color1(d.data.categoria))
             .attr('stroke', 'white')
             .style('stroke-width', '2px');
-
         const legend1 = pieChart1.append('div').attr('class', 'legend').style('margin-top', '10px');
         legend1.selectAll('div')
             .data(dataCategorias)
@@ -130,34 +159,27 @@
     // Función para crear el Gráfico de Barras Horizontales
     function drawHorizontalBarChart() {
         d3.select('#Pastel-2 svg').remove();
-
         const barChart1 = d3.select('#Pastel-2');
         const margin2 = { top: 20, right: 30, bottom: 40, left: 120 };
         const width2 = barChart1.node().getBoundingClientRect().width - margin2.left - margin2.right;
         const height2 = barChart1.node().getBoundingClientRect().height - 50 - margin2.top - margin2.bottom;
-
         const svg2 = barChart1.append('svg')
             .attr('width', width2 + margin2.left + margin2.right)
             .attr('height', height2 + margin2.top + margin2.bottom)
             .append('g')
             .attr('transform', `translate(${margin2.left}, ${margin2.top})`);
-
         const x2 = d3.scaleLinear()
             .domain([0, d3.max(dataProductos, d => d.unidades)]).nice()
             .range([0, width2]);
-
         const y2 = d3.scaleBand()
             .domain(dataProductos.map(d => d.producto))
             .range([0, height2])
             .padding(0.1);
-
         svg2.append('g')
             .call(d3.axisLeft(y2));
-
         svg2.append('g')
             .attr('transform', `translate(0, ${height2})`)
             .call(d3.axisBottom(x2));
-
         svg2.selectAll('rect')
             .data(dataProductos)
             .enter()
@@ -173,38 +195,30 @@
     function drawComparisonBarChart() {
         d3.select('.grf_vs svg').remove();
         d3.select('.grf_vs .legend').remove();
-
         const barChart2 = d3.select('.grf_vs');
         const margin3 = { top: 20, right: 30, bottom: 40, left: 40 };
         const width3 = barChart2.node().getBoundingClientRect().width - margin3.left - margin3.right;
         const height3 = barChart2.node().getBoundingClientRect().height - 50 - margin3.top - margin3.bottom;
-        
         const svg3 = barChart2.append('svg')
             .attr('width', width3 + margin3.left + margin3.right)
             .attr('height', height3 + margin3.top + margin3.bottom)
             .append('g')
             .attr('transform', `translate(${margin3.left}, ${margin3.top})`);
-
         const x3 = d3.scaleBand()
             .domain(dataComparacion.map(d => d.producto))
             .range([0, width3])
             .padding(0.1);
-        
         const y3 = d3.scaleLinear()
             .domain([0, d3.max(dataComparacion, d => d.unidades)]).nice()
             .range([height3, 0]);
-
         const color3 = d3.scaleOrdinal()
             .domain(['Caro', 'Barato'])
             .range(['#d32f2f', '#4caf50']);
-        
         svg3.append('g')
             .attr('transform', `translate(0, ${height3})`)
             .call(d3.axisBottom(x3));
-
         svg3.append('g')
             .call(d3.axisLeft(y3));
-        
         svg3.selectAll('rect')
             .data(dataComparacion)
             .enter()
@@ -214,7 +228,6 @@
             .attr('width', x3.bandwidth())
             .attr('height', d => height3 - y3(d.unidades))
             .attr('fill', d => color3(d.tipo));
-
         const legend3 = barChart2.append('div').attr('class', 'legend').style('margin-top', '10px');
         legend3.selectAll('div')
             .data(['Caro', 'Barato'])
@@ -225,17 +238,135 @@
             .html(d => `<span style="background-color: ${color3(d)}; width: 15px; height: 15px; margin-right: 5px;"></span> ${d}`);
     }
 
-    // Llamamos a las funciones para dibujar los gráficos la primera vez
+    // Función para el Gráfico de Línea
+    function drawLineChart() {
+        d3.select('#line-chart svg').remove();
+        const lineChartContainer = d3.select('#line-chart');
+        const margin = { top: 20, right: 30, bottom: 40, left: 40 };
+        const width = lineChartContainer.node().getBoundingClientRect().width - margin.left - margin.right;
+        const height = lineChartContainer.node().getBoundingClientRect().height - 50 - margin.top - margin.bottom;
+        const svg = lineChartContainer.append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom)
+            .append('g')
+            .attr('transform', `translate(${margin.left}, ${margin.top})`);
+        const x = d3.scaleTime()
+            .domain(d3.extent(dataVentasDiarias, d => d.fecha))
+            .range([0, width]);
+        const y = d3.scaleLinear()
+            .domain([0, d3.max(dataVentasDiarias, d => d.ventas)]).nice()
+            .range([height, 0]);
+        svg.append('g')
+            .attr('transform', `translate(0, ${height})`)
+            .call(d3.axisBottom(x));
+        svg.append('g')
+            .call(d3.axisLeft(y));
+        const line = d3.line()
+            .x(d => x(d.fecha))
+            .y(d => y(d.ventas));
+        svg.append('path')
+            .datum(dataVentasDiarias)
+            .attr('fill', 'none')
+            .attr('stroke', 'steelblue')
+            .attr('stroke-width', 3)
+            .attr('d', line);
+    }
+    
+    // Función para el Diagrama de Dispersión
+    function drawScatterPlot() {
+        d3.select('#scatter-plot svg').remove();
+        const scatterContainer = d3.select('#scatter-plot');
+        const margin = { top: 20, right: 30, bottom: 40, left: 40 };
+        const width = scatterContainer.node().getBoundingClientRect().width - margin.left - margin.right;
+        const height = scatterContainer.node().getBoundingClientRect().height - 50 - margin.top - margin.bottom;
+        const svg = scatterContainer.append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom)
+            .append('g')
+            .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+        const x = d3.scaleLinear()
+            .domain([0, d3.max(dataDispersión, d => d.precio)]).nice()
+            .range([0, width]);
+
+        const y = d3.scaleLinear()
+            .domain([0, d3.max(dataDispersión, d => d.ventas)]).nice()
+            .range([height, 0]);
+
+        svg.append('g')
+            .attr('transform', `translate(0, ${height})`)
+            .call(d3.axisBottom(x));
+        
+        svg.append('g')
+            .call(d3.axisLeft(y));
+
+        svg.selectAll('circle')
+            .data(dataDispersión)
+            .enter()
+            .append('circle')
+            .attr('cx', d => x(d.precio))
+            .attr('cy', d => y(d.ventas))
+            .attr('r', 5)
+            .style('fill', 'rgba(255, 99, 132, 0.7)');
+    }
+
+    // Función para el Gráfico de Burbujas
+    function drawBubbleChart() {
+        d3.select('#bubble-chart svg').remove();
+        const bubbleContainer = d3.select('#bubble-chart');
+        const margin = { top: 20, right: 30, bottom: 40, left: 40 };
+        const width = bubbleContainer.node().getBoundingClientRect().width - margin.left - margin.right;
+        const height = bubbleContainer.node().getBoundingClientRect().height - 50 - margin.top - margin.bottom;
+        const svg = bubbleContainer.append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom)
+            .append('g')
+            .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+        const x = d3.scaleLinear()
+            .domain([0, d3.max(dataBurbujas, d => d.precio)]).nice()
+            .range([0, width]);
+        
+        const y = d3.scaleLinear()
+            .domain([0, d3.max(dataBurbujas, d => d.stock)]).nice()
+            .range([height, 0]);
+
+        const z = d3.scaleLinear()
+            .domain([0, d3.max(dataBurbujas, d => d.demanda)]).range([5, 40]);
+
+        svg.append('g')
+            .attr('transform', `translate(0, ${height})`)
+            .call(d3.axisBottom(x));
+
+        svg.append('g')
+            .call(d3.axisLeft(y));
+
+        svg.selectAll('circle')
+            .data(dataBurbujas)
+            .enter()
+            .append('circle')
+            .attr('cx', d => x(d.precio))
+            .attr('cy', d => y(d.stock))
+            .attr('r', d => z(d.demanda))
+            .style('fill', 'rgba(75, 192, 192, 0.7)');
+    }
+
+    // Llamamo a las funciones para dibujar todos los gráficos la primera vez
     drawPieChart();
     drawHorizontalBarChart();
     drawComparisonBarChart();
+    drawLineChart();
+    drawScatterPlot(); // <-- Nuevo
+    drawBubbleChart(); // <-- Nuevo
 
-    // Vinculamos las funciones de dibujo al evento de redimensionamiento
-    // Usamos debounce para optimizar el rendimiento
+    // Para vinculo las funciones de dibujo al evento de redimensionamiento
     const handleResize = debounce(() => {
         drawPieChart();
         drawHorizontalBarChart();
         drawComparisonBarChart();
+        drawLineChart();
+        drawScatterPlot(); // <-- Se actualiza al redimensionar
+        drawBubbleChart(); // <-- Se actualiza al redimensionar
     });
 
     window.addEventListener('resize', handleResize);
