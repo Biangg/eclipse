@@ -1,12 +1,11 @@
-
 {% extends "root.html" %}
 {% block title %} Gráficas {% endblock %}
 
 {% block content %}
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/grf.css') }}">
+    <link rel="stylesheet" href="/static/css/grf.css">
     
-    <script src="{{ url_for('static', filename='js/d3.v7.min.js') }}"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
 
     <div id="Graficas" class="cont_grf">
         <div class="grf_datos">
@@ -30,27 +29,31 @@
         <div class="grf_info grf_reporte">
             <div id="Pastel-1" class="grf_past">
                 <h2>Categorías más vendidas</h2>
-                <!-- Gráfica circular con las categorías más vendidas en porcentajes y notas en colores para cada categoría para identificar las categorías Ej [Licores, batidos, refrescos, cervezas] -->
             </div>
             <div id="Pastel-2" class="grf_past">
                 <h2>Productos más vendidos</h2>
-                <!-- Top 10 productos más vendidas y el total unitario de cada uno Ej [Ron con cola: 84, Fanta Piña: 35, Batido de limón : 10] -->
             </div>
         </div>
 
         <div class="grf_info grf_vs">
-            <h2>Productos más caros vs Barratos</h2>
-            <!-- Aquí agregaré una gráfica para comparar los productos más caros con los baratos y ver cuál se vende más -->
+            <h2>Productos más caros vs Baratos</h2>
         </div>
 
         <div id="line-chart" class="grf_info">
-            <h2>Ventans Diarias</h2>
+            <h2>Ventas Diarias</h2>
+        </div>
+        
+        <div id="scatter-plot" class="grf_info">
+            <h2>Precio vs. Cantidad Vendida</h2>
         </div>
 
+        <div id="bubble-chart" class="grf_info">
+            <h2>Productos por Stock, Precio y Demanda</h2>
+        </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+   document.addEventListener('DOMContentLoaded', function() {
 
     // Debounce function para optimizar el redimensionamiento
     function debounce(func, timeout = 300) {
@@ -83,7 +86,6 @@
         { producto: 'Agua mineral', tipo: 'Barato', unidades: 60 }
     ];
 
-    // Datos para el nuevo gráfico de línea (Ventas diarias)
     const dataVentasDiarias = [
         { fecha: new Date('2025-07-28'), ventas: 150 },
         { fecha: new Date('2025-07-29'), ventas: 220 },
@@ -93,12 +95,31 @@
         { fecha: new Date('2025-08-02'), ventas: 400 },
         { fecha: new Date('2025-08-03'), ventas: 320 }
     ];
+    
+    // Datos para el diagrama de dispersión
+    const dataDispersión = [
+        { precio: 5, ventas: 100 },
+        { precio: 10, ventas: 80 },
+        { precio: 20, ventas: 50 },
+        { precio: 15, ventas: 70 },
+        { precio: 8, ventas: 120 },
+        { precio: 25, ventas: 40 },
+        { precio: 12, ventas: 95 }
+    ];
+
+    // Datos para el gráfico de burbujas
+    const dataBurbujas = [
+        { producto: 'Ron', stock: 150, precio: 25, demanda: 75 },
+        { producto: 'Agua', stock: 500, precio: 2, demanda: 200 },
+        { producto: 'Cerveza', stock: 300, precio: 8, demanda: 150 },
+        { producto: 'Ginebra', stock: 80, precio: 30, demanda: 40 },
+        { producto: 'Refresco', stock: 250, precio: 5, demanda: 100 }
+    ];
 
     // Función para crear el Gráfico de Pastel
     function drawPieChart() {
         d3.select('#Pastel-1 svg').remove();
         d3.select('#Pastel-1 .legend').remove();
-        // ... (código del gráfico de pastel) ...
         const pieChart1 = d3.select('#Pastel-1');
         const margin = { top: 20, right: 20, bottom: 20, left: 20 };
         const width = pieChart1.node().getBoundingClientRect().width - margin.left - margin.right;
@@ -137,7 +158,6 @@
     // Función para crear el Gráfico de Barras Horizontales
     function drawHorizontalBarChart() {
         d3.select('#Pastel-2 svg').remove();
-        // ... (código del gráfico de barras horizontales) ...
         const barChart1 = d3.select('#Pastel-2');
         const margin2 = { top: 20, right: 30, bottom: 40, left: 120 };
         const width2 = barChart1.node().getBoundingClientRect().width - margin2.left - margin2.right;
@@ -174,7 +194,6 @@
     function drawComparisonBarChart() {
         d3.select('.grf_vs svg').remove();
         d3.select('.grf_vs .legend').remove();
-        // ... (código del gráfico de barras de comparación) ...
         const barChart2 = d3.select('.grf_vs');
         const margin3 = { top: 20, right: 30, bottom: 40, left: 40 };
         const width3 = barChart2.node().getBoundingClientRect().width - margin3.left - margin3.right;
@@ -218,44 +237,36 @@
             .html(d => `<span style="background-color: ${color3(d)}; width: 15px; height: 15px; margin-right: 5px;"></span> ${d}`);
     }
 
-    // NUEVA FUNCIÓN: Gráfico de Línea
+    // Función para el Gráfico de Línea
     function drawLineChart() {
         d3.select('#line-chart svg').remove();
-
         const lineChartContainer = d3.select('#line-chart');
         const margin = { top: 20, right: 30, bottom: 40, left: 40 };
         const width = lineChartContainer.node().getBoundingClientRect().width - margin.left - margin.right;
         const height = lineChartContainer.node().getBoundingClientRect().height - 50 - margin.top - margin.bottom;
-
         const svg = lineChartContainer.append('svg')
             .attr('width', width + margin.left + margin.right)
             .attr('height', height + margin.top + margin.bottom)
             .append('g')
             .attr('transform', `translate(${margin.left}, ${margin.top})`);
-
-        // Escalas para el eje X (tiempo) y el eje Y (ventas)
         const x = d3.scaleTime()
             .domain(d3.extent(dataVentasDiarias, d => d.fecha))
             .range([0, width]);
-
         const y = d3.scaleLinear()
             .domain([0, d3.max(dataVentasDiarias, d => d.ventas)]).nice()
             .range([height, 0]);
-
-        // Ejes X e Y
         svg.append('g')
             .attr('transform', `translate(0, ${height})`)
             .call(d3.axisBottom(x));
-
         svg.append('g')
             .call(d3.axisLeft(y));
-
-        // Generador de la línea
+        
+        // CORRECCIÓN: para agregar la función de curva d3.curveMonotoneX
         const line = d3.line()
+            .curve(d3.curveMonotoneX) // Esto hace la línea curva
             .x(d => x(d.fecha))
             .y(d => y(d.ventas));
 
-        // Dibujar la línea
         svg.append('path')
             .datum(dataVentasDiarias)
             .attr('fill', 'none')
@@ -263,23 +274,106 @@
             .attr('stroke-width', 3)
             .attr('d', line);
     }
+    
+    // Función para el Diagrama de Dispersión
+    function drawScatterPlot() {
+        d3.select('#scatter-plot svg').remove();
+        const scatterContainer = d3.select('#scatter-plot');
+        const margin = { top: 20, right: 30, bottom: 40, left: 40 };
+        const width = scatterContainer.node().getBoundingClientRect().width - margin.left - margin.right;
+        const height = scatterContainer.node().getBoundingClientRect().height - 50 - margin.top - margin.bottom;
+        const svg = scatterContainer.append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom)
+            .append('g')
+            .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-    // Llamamos a las funciones para dibujar los gráficos la primera vez
+        const x = d3.scaleLinear()
+            .domain([0, d3.max(dataDispersión, d => d.precio)]).nice()
+            .range([0, width]);
+
+        const y = d3.scaleLinear()
+            .domain([0, d3.max(dataDispersión, d => d.ventas)]).nice()
+            .range([height, 0]);
+
+        svg.append('g')
+            .attr('transform', `translate(0, ${height})`)
+            .call(d3.axisBottom(x));
+        
+        svg.append('g')
+            .call(d3.axisLeft(y));
+
+        svg.selectAll('circle')
+            .data(dataDispersión)
+            .enter()
+            .append('circle')
+            .attr('cx', d => x(d.precio))
+            .attr('cy', d => y(d.ventas))
+            .attr('r', 5)
+            .style('fill', 'rgba(255, 99, 132, 0.7)');
+    }
+
+    // Función para el Gráfico de Burbujas
+    function drawBubbleChart() {
+        d3.select('#bubble-chart svg').remove();
+        const bubbleContainer = d3.select('#bubble-chart');
+        const margin = { top: 20, right: 30, bottom: 40, left: 40 };
+        const width = bubbleContainer.node().getBoundingClientRect().width - margin.left - margin.right;
+        const height = bubbleContainer.node().getBoundingClientRect().height - 50 - margin.top - margin.bottom;
+        const svg = bubbleContainer.append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom)
+            .append('g')
+            .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+        const x = d3.scaleLinear()
+            .domain([0, d3.max(dataBurbujas, d => d.precio)]).nice()
+            .range([0, width]);
+        
+        const y = d3.scaleLinear()
+            .domain([0, d3.max(dataBurbujas, d => d.stock)]).nice()
+            .range([height, 0]);
+
+        const z = d3.scaleLinear()
+            .domain([0, d3.max(dataBurbujas, d => d.demanda)]).range([5, 40]);
+
+        svg.append('g')
+            .attr('transform', `translate(0, ${height})`)
+            .call(d3.axisBottom(x));
+
+        svg.append('g')
+            .call(d3.axisLeft(y));
+
+        svg.selectAll('circle')
+            .data(dataBurbujas)
+            .enter()
+            .append('circle')
+            .attr('cx', d => x(d.precio))
+            .attr('cy', d => y(d.stock))
+            .attr('r', d => z(d.demanda))
+            .style('fill', 'rgba(75, 192, 192, 0.7)');
+    }
+
+    // Llamo a las funciones para dibujar todos los gráficos la primera vez
     drawPieChart();
     drawHorizontalBarChart();
     drawComparisonBarChart();
-    drawLineChart(); // <-- Se llama a la nueva función
+    drawLineChart();
+    drawScatterPlot();
+    drawBubbleChart();
 
-    // Vinculamos las funciones de dibujo al evento de redimensionamiento
+    // Vinculo las funciones de dibujo al evento de redimensionamiento
     const handleResize = debounce(() => {
         drawPieChart();
         drawHorizontalBarChart();
         drawComparisonBarChart();
-        drawLineChart(); // <-- Se actualiza al redimensionar
+        drawLineChart();
+        drawScatterPlot();
+        drawBubbleChart();
     });
 
     window.addEventListener('resize', handleResize);
 });
     </script>
-
 {% endblock %}
+
