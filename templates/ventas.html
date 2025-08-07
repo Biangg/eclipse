@@ -107,7 +107,10 @@
                                         <p> as click en <a>+<a> para registrar un nuevo srticulo<p>
                             </div>`
                         }else{
-                            let texto = '';
+                            let texto = ` <button onclick='volver()' style="border-radius: 10px; box-sizing: border-box; padding: 40px; background-size: coverx;background-repeat: no-repeat;
+                            background-image: url(../static/icons/back.png); background-position: center; margin: 10px;" 
+                            class="${item.id_producto}" id="folder"><b style = 'top: 72px;' class='${item.precio_unitario}' >volver</b></button>
+                                `;
                             response.forEach((item, idx) => {
                             texto += `
                             <button ondblclick='addElemento(this)' style="border-radius: 10px; box-sizing: border-box; padding: 40px; background-size: coverx;background-repeat: no-repeat;
@@ -124,6 +127,10 @@
                 });
                 }
             })
+        }
+        
+        function volver(){
+            alert('una carpeta')
         }
 
         
